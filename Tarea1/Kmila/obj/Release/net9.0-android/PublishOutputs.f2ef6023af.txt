@@ -1,0 +1,4 @@
+/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila/bin/Release/net9.0-android/publish/kmila.kmila-Signed.aab
+/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila/bin/Release/net9.0-android/publish/kmila.kmila.aab
+/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila/bin/Release/net9.0-android/publish/kmila.kmila-Signed.apk
+/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila/bin/Release/net9.0-android/publish/_Microsoft.Android.Resource.Designer.dll

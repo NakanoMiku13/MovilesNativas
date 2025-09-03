@@ -1,0 +1,173 @@
+{
+  "format": 1,
+  "restore": {
+    "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Web/Kmila.Web.csproj": {}
+  },
+  "projects": {
+    "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj",
+        "projectName": "Kmila.Shared",
+        "projectPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj",
+        "packagesPath": "/home/miku/.nuget/packages/",
+        "outputPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/miku/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/home/miku/nuget-local": {},
+          "/usr/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Blazor.Bootstrap": {
+              "target": "Package",
+              "version": "[3.4.0, )"
+            },
+            "BlazorMonaco": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
+            "Microsoft.AspNetCore.Components.Web": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Abstractions": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Web/Kmila.Web.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Web/Kmila.Web.csproj",
+        "projectName": "Kmila.Web",
+        "projectPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Web/Kmila.Web.csproj",
+        "packagesPath": "/home/miku/.nuget/packages/",
+        "outputPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Web/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/miku/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "/home/miku/nuget-local": {},
+          "/usr/share/dotnet/library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj": {
+                "projectPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Blazor.Bootstrap": {
+              "target": "Package",
+              "version": "[3.4.0, )"
+            },
+            "BlazorMonaco": {
+              "target": "Package",
+              "version": "[3.3.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Sqlite": {
+              "target": "Package",
+              "version": "[9.0.8, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

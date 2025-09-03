@@ -1,0 +1,26 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <ThemeSwitcher OnThemeChanged='async (string e) =>{
+                string theme = e == "dark" ? "vs-dark" : "vs";
+                await BlazorMonaco.Editor.Global.SetTheme(JS, theme);
+            }'/>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+<Toasts class="p-3" AutoHide="true" Delay="5000" Placement="ToastsPlacement.TopCenter" />
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>

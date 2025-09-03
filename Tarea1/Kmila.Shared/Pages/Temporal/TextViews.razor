@@ -1,0 +1,16 @@
+@page "/text-views"
+<div class="col-sm-12 col">
+    <div class="form-floating mb-3">
+        <input type="text" class="form-control" id="InputText" placeholder="Input text" @bind="_text">
+        <label for="InputText">Input text</label>
+    </div>
+</div>
+
+<p>
+    Input text que permite hacer el ingreso de información en formato de formulario
+</p>
+
+<p>Texto escrito: @_text</p>
+@code{
+    private string _text = string.Empty;
+}

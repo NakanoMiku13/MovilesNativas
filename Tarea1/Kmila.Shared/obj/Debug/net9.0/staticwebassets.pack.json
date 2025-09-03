@@ -1,0 +1,49 @@
+{
+  "Files": [
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/obj/Debug/net9.0/scopedcss/projectbundle/Kmila.Shared.bundle.scp.css",
+      "PackagePath": "staticwebassets/Kmila.Shared.s0ewrqys05.bundle.scp.css"
+    },
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/wwwroot/app.css",
+      "PackagePath": "staticwebassets/app.css"
+    },
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/wwwroot/bootstrap/bootstrap.min.css",
+      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css"
+    },
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/wwwroot/bootstrap/bootstrap.min.css.map",
+      "PackagePath": "staticwebassets/bootstrap/bootstrap.min.css.map"
+    },
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/wwwroot/favicon.png",
+      "PackagePath": "staticwebassets/favicon.png"
+    },
+    {
+      "Id": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/wwwroot/js/vhdl.js",
+      "PackagePath": "staticwebassets/js/vhdl.js"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.Kmila.Shared.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.Kmila.Shared.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.build.Kmila.Shared.props",
+      "PackagePath": "build\\Kmila.Shared.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildMultiTargeting.Kmila.Shared.props",
+      "PackagePath": "buildMultiTargeting\\Kmila.Shared.props"
+    },
+    {
+      "Id": "obj/Debug/net9.0/staticwebassets/msbuild.buildTransitive.Kmila.Shared.props",
+      "PackagePath": "buildTransitive\\Kmila.Shared.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

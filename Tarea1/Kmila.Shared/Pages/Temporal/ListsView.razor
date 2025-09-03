@@ -1,0 +1,29 @@
+@page "/lists-view"
+<Button
+    Color="ButtonColor.Success"
+    Outline=true
+    TooltipTitle="Aumentar cuenta"
+    @onclick='() => {
+        _counter++;
+    }'
+>
+    Agregar número a la lista
+</Button>
+<Button
+    Color="ButtonColor.Success"
+    Outline=true
+    TooltipTitle="Aumentar cuenta"
+    @onclick='() => {
+        _counter--;
+    }'
+>
+    Eliminar número a la lista
+</Button>
+<ul>
+    @for(int i = 0; i < _counter; i++){
+        <li>Elemento: @i</li>
+    }
+</ul>
+@code{
+    private int _counter = 0;
+}

@@ -1,0 +1,15 @@
+@page "/buttons-view"
+<Button
+    Color="ButtonColor.Success"
+    Outline=true
+    TooltipTitle="Toast"
+    @onclick='() => {
+        ToastService.Notify(new(){ Message = "Este es un mensaje triggeado por el botón", Title="Mensaje nuevo"});
+    }'
+>
+    Boton de ejemplo para triggear un Toast
+</Button>
+
+@code{
+
+}

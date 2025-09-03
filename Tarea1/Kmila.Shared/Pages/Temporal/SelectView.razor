@@ -1,0 +1,21 @@
+@page "/select-view"
+
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault" @bind="_showSpinner">
+    <label class="form-check-label" for="switchCheckDefault">
+        @if(_showSpinner){
+            <p>Da click para mostrar un elemento oculto</p>
+        }else{
+            <p>Da click ocultar elemento</p>
+        }
+    </label>
+</div>
+
+@if(_showSpinner){
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+}
+@code{
+    private bool _showSpinner = false;
+}

@@ -1,0 +1,1153 @@
+{
+  "version": 3,
+  "targets": {
+    "net9.0": {
+      "Blazor.Bootstrap/3.4.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components.Web": "9.0.0"
+        },
+        "compile": {
+          "lib/net9.0/BlazorBootstrap.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/BlazorBootstrap.dll": {}
+        },
+        "build": {
+          "buildTransitive/Blazor.Bootstrap.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/Blazor.Bootstrap.props": {}
+        }
+      },
+      "BlazorMonaco/3.3.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "9.0.0",
+          "Microsoft.AspNetCore.Components.Web": "9.0.0"
+        },
+        "compile": {
+          "lib/net9.0/BlazorMonaco.dll": {}
+        },
+        "runtime": {
+          "lib/net9.0/BlazorMonaco.dll": {}
+        },
+        "build": {
+          "buildTransitive/BlazorMonaco.props": {}
+        },
+        "buildMultiTargeting": {
+          "buildMultiTargeting/BlazorMonaco.props": {}
+        }
+      },
+      "Microsoft.AspNetCore.Authorization/9.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Metadata": "9.0.5",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.5",
+          "Microsoft.Extensions.Options": "9.0.5"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Authorization.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Authorization.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Components/9.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Authorization": "9.0.5",
+          "Microsoft.AspNetCore.Components.Analyzers": "9.0.5"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Components.Analyzers/9.0.5": {
+        "type": "package",
+        "build": {
+          "buildTransitive/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets": {}
+        }
+      },
+      "Microsoft.AspNetCore.Components.Forms/9.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "9.0.5"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Forms.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Forms.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Components.Web/9.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Components": "9.0.5",
+          "Microsoft.AspNetCore.Components.Forms": "9.0.5",
+          "Microsoft.Extensions.DependencyInjection": "9.0.5",
+          "Microsoft.Extensions.Primitives": "9.0.5",
+          "Microsoft.JSInterop": "9.0.5"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Web.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Components.Web.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.AspNetCore.Metadata/9.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Microsoft.AspNetCore.Metadata.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.AspNetCore.Metadata.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore.Abstractions": "9.0.8",
+          "Microsoft.EntityFrameworkCore.Analyzers": "9.0.8",
+          "Microsoft.Extensions.Caching.Memory": "9.0.8",
+          "Microsoft.Extensions.Logging": "9.0.8"
+        },
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props": {}
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Abstractions/9.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Microsoft.EntityFrameworkCore.Analyzers/9.0.8": {
+        "type": "package"
+      },
+      "Microsoft.Extensions.Caching.Abstractions/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Caching.Memory/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.Caching.Abstractions": "9.0.8",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Options": "9.0.8",
+          "Microsoft.Extensions.Primitives": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Logging/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "9.0.8",
+          "Microsoft.Extensions.Logging.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Options": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Logging.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets": {}
+        }
+      },
+      "Microsoft.Extensions.Options/9.0.8": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "9.0.8",
+          "Microsoft.Extensions.Primitives": "9.0.8"
+        },
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Options.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Options.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/Microsoft.Extensions.Options.targets": {}
+        }
+      },
+      "Microsoft.Extensions.Primitives/9.0.8": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.Extensions.Primitives.dll": {
+            "related": ".xml"
+          }
+        },
+        "build": {
+          "buildTransitive/net8.0/_._": {}
+        }
+      },
+      "Microsoft.JSInterop/9.0.5": {
+        "type": "package",
+        "compile": {
+          "lib/net9.0/Microsoft.JSInterop.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net9.0/Microsoft.JSInterop.dll": {
+            "related": ".xml"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Blazor.Bootstrap/3.4.0": {
+      "sha512": "RlK531tJCXGEoESwjDIARttoRPtOCXXQqrNwfaai7sIWir2pqsBop0gySBqN742m+K2vY9p9J7Mwwl6XcNXm6g==",
+      "type": "package",
+      "path": "blazor.bootstrap/3.4.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "128X128.png",
+        "README.md",
+        "blazor.bootstrap.3.4.0.nupkg.sha512",
+        "blazor.bootstrap.nuspec",
+        "build/Blazor.Bootstrap.props",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/Blazor.Bootstrap.props",
+        "buildTransitive/Blazor.Bootstrap.props",
+        "lib/net6.0/BlazorBootstrap.dll",
+        "lib/net8.0/BlazorBootstrap.dll",
+        "lib/net9.0/BlazorBootstrap.dll",
+        "staticwebassets/Blazor.Bootstrap.7t9tbfaemk.bundle.scp.css",
+        "staticwebassets/blazor.bootstrap.css",
+        "staticwebassets/blazor.bootstrap.js",
+        "staticwebassets/blazor.bootstrap.pdf.js",
+        "staticwebassets/blazor.bootstrap.sortable-list.js",
+        "staticwebassets/blazor.bootstrap.theme-switcher.js",
+        "staticwebassets/icon/128X128.png",
+        "staticwebassets/pdfjs-4.0.379.min.js",
+        "staticwebassets/pdfjs-4.0.379.worker.min.js"
+      ]
+    },
+    "BlazorMonaco/3.3.0": {
+      "sha512": "ywtUCZMfmaNBadhQbZEGPerdptHUcyVbPB2Ug1HTNzarJlMCJFSBRvQZefS383h/vDhFgHUrR7/pE6scIc6lJg==",
+      "type": "package",
+      "path": "blazormonaco/3.3.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "blazormonaco.3.3.0.nupkg.sha512",
+        "blazormonaco.nuspec",
+        "build/BlazorMonaco.props",
+        "build/Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+        "build/Microsoft.AspNetCore.StaticWebAssets.props",
+        "buildMultiTargeting/BlazorMonaco.props",
+        "buildTransitive/BlazorMonaco.props",
+        "icon.png",
+        "lib/net5.0/BlazorMonaco.dll",
+        "lib/net6.0/BlazorMonaco.dll",
+        "lib/net7.0/BlazorMonaco.dll",
+        "lib/net8.0/BlazorMonaco.dll",
+        "lib/net9.0/BlazorMonaco.dll",
+        "lib/netstandard2.0/BlazorMonaco.dll",
+        "staticwebassets/jsInterop.js",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.de.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.es.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.fr.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.it.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.ja.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.ko.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.ru.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.zh-cn.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/nls.messages.zh-tw.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/vs/base/worker/workerMain.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/vs/editor/editor.main.js.map",
+        "staticwebassets/lib/monaco-editor/min-maps/vs/loader.js.map",
+        "staticwebassets/lib/monaco-editor/min/vs/base/browser/ui/codicons/codicon/codicon.ttf",
+        "staticwebassets/lib/monaco-editor/min/vs/base/worker/workerMain.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/abap/abap.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/abap/abap.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/apex/apex.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/apex/apex.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/azcli/azcli.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/azcli/azcli.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/bat/bat.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/bat/bat.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/bicep/bicep.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/bicep/bicep.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cameligo/cameligo.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cameligo/cameligo.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/clojure/clojure.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/clojure/clojure.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/coffee/coffee.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/coffee/coffee.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cpp/cpp.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cpp/cpp.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/csharp/csharp.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/csharp/csharp.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/csp/csp.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/csp/csp.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/css/css.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/css/css.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cypher/cypher.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/cypher/cypher.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/dart/dart.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/dart/dart.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/dockerfile/dockerfile.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/dockerfile/dockerfile.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ecl/ecl.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ecl/ecl.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/elixir/elixir.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/elixir/elixir.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/flow9/flow9.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/flow9/flow9.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/freemarker2/freemarker2.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/freemarker2/freemarker2.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/fsharp/fsharp.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/fsharp/fsharp.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/go/go.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/go/go.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/graphql/graphql.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/graphql/graphql.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/handlebars/handlebars.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/handlebars/handlebars.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/hcl/hcl.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/hcl/hcl.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/html/html.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/html/html.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ini/ini.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ini/ini.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/java/java.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/java/java.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/javascript/javascript.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/javascript/javascript.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/julia/julia.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/julia/julia.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/kotlin/kotlin.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/kotlin/kotlin.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/less/less.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/less/less.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/lexon/lexon.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/lexon/lexon.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/liquid/liquid.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/liquid/liquid.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/lua/lua.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/lua/lua.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/m3/m3.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/m3/m3.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/markdown/markdown.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/markdown/markdown.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mdx/mdx.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mdx/mdx.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mips/mips.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mips/mips.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/msdax/msdax.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/msdax/msdax.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mysql/mysql.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/mysql/mysql.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/objective-c/objective-c.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/objective-c/objective-c.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pascal/pascal.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pascal/pascal.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pascaligo/pascaligo.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pascaligo/pascaligo.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/perl/perl.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/perl/perl.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pgsql/pgsql.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pgsql/pgsql.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/php/php.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/php/php.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pla/pla.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pla/pla.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/postiats/postiats.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/postiats/postiats.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/powerquery/powerquery.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/powerquery/powerquery.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/powershell/powershell.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/powershell/powershell.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/protobuf/protobuf.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/protobuf/protobuf.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pug/pug.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/pug/pug.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/python/python.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/python/python.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/qsharp/qsharp.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/qsharp/qsharp.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/r/r.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/r/r.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/razor/razor.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/razor/razor.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/redis/redis.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/redis/redis.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/redshift/redshift.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/redshift/redshift.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/restructuredtext/restructuredtext.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/restructuredtext/restructuredtext.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ruby/ruby.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/ruby/ruby.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/rust/rust.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/rust/rust.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sb/sb.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sb/sb.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scala/scala.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scala/scala.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scheme/scheme.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scheme/scheme.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scss/scss.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/scss/scss.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/shell/shell.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/shell/shell.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/solidity/solidity.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/solidity/solidity.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sophia/sophia.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sophia/sophia.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sparql/sparql.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sparql/sparql.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sql/sql.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/sql/sql.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/st/st.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/st/st.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/swift/swift.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/swift/swift.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/systemverilog/systemverilog.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/systemverilog/systemverilog.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/tcl/tcl.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/tcl/tcl.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/twig/twig.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/twig/twig.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/typescript/typescript.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/typescript/typescript.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/typespec/typespec.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/typespec/typespec.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/vb/vb.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/vb/vb.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/wgsl/wgsl.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/wgsl/wgsl.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/xml/xml.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/xml/xml.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/yaml/yaml.js",
+        "staticwebassets/lib/monaco-editor/min/vs/basic-languages/yaml/yaml.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/editor/editor.main.css",
+        "staticwebassets/lib/monaco-editor/min/vs/editor/editor.main.js",
+        "staticwebassets/lib/monaco-editor/min/vs/editor/editor.main.min.css",
+        "staticwebassets/lib/monaco-editor/min/vs/language/css/cssMode.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/css/cssMode.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/css/cssWorker.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/css/cssWorker.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/html/htmlMode.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/html/htmlMode.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/html/htmlWorker.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/html/htmlWorker.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/json/jsonMode.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/json/jsonMode.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/json/jsonWorker.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/json/jsonWorker.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/typescript/tsMode.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/typescript/tsWorker.js",
+        "staticwebassets/lib/monaco-editor/min/vs/language/typescript/tsWorker.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/loader.js",
+        "staticwebassets/lib/monaco-editor/min/vs/loader.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.de.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.de.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.es.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.es.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.fr.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.fr.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.it.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.it.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ja.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ja.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ko.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ko.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ru.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.ru.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.zh-cn.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.zh-cn.min.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.zh-tw.js",
+        "staticwebassets/lib/monaco-editor/min/vs/nls.messages.zh-tw.min.js"
+      ]
+    },
+    "Microsoft.AspNetCore.Authorization/9.0.5": {
+      "sha512": "HPd+7PG+nMZSP13bTJuM5+q0vdzoBtjoBUMP9iuUGwG/kFHkeBOZ9QrZuSHHGmz/IgYdLbqbdJGEykSI5biIPw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.authorization/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net462/Microsoft.AspNetCore.Authorization.dll",
+        "lib/net462/Microsoft.AspNetCore.Authorization.xml",
+        "lib/net9.0/Microsoft.AspNetCore.Authorization.dll",
+        "lib/net9.0/Microsoft.AspNetCore.Authorization.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Authorization.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Authorization.xml",
+        "microsoft.aspnetcore.authorization.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.authorization.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Components/9.0.5": {
+      "sha512": "qwA9bx7nWayh1ogWe1H13vyGL64pNjHrukHmnZ9WZbQPtHeY9QTuXkvF/Uue0tzGbxChBf9v2LH5+KeVaRJIqw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "lib/net9.0/Microsoft.AspNetCore.Components.dll",
+        "lib/net9.0/Microsoft.AspNetCore.Components.xml",
+        "microsoft.aspnetcore.components.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.components.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Components.Analyzers/9.0.5": {
+      "sha512": "u9dQP0/bjkTVHFHVBV+8TYpBVerjbFfvD3nwwOfaoJ8VmyCHoBFbD8m4nxV+rfu+jVLe2FQF4skjHZLIjjFbyQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components.analyzers/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "analyzers/dotnet/cs/Microsoft.AspNetCore.Components.Analyzers.dll",
+        "build/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets",
+        "buildTransitive/netstandard2.0/Microsoft.AspNetCore.Components.Analyzers.targets",
+        "microsoft.aspnetcore.components.analyzers.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.components.analyzers.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Components.Forms/9.0.5": {
+      "sha512": "KsAPGDQIa3SpP9yaIDrlETHpqprtmbbotdbGfGJ9aVvn/vi72cCTUVzpWOXIXgstVCb0ZQ940o/wfHKxBZEQMg==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components.forms/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "lib/net9.0/Microsoft.AspNetCore.Components.Forms.dll",
+        "lib/net9.0/Microsoft.AspNetCore.Components.Forms.xml",
+        "microsoft.aspnetcore.components.forms.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.components.forms.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Components.Web/9.0.5": {
+      "sha512": "llh2dh9rR9JcnAMqvbijc9BzEnVhloQwKF8Kvfw73N2tJMnUJoxF3C9Ln1sao+nkZo3IpUuUu3k2czLOpS3NRQ==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.components.web/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.txt",
+        "lib/net9.0/Microsoft.AspNetCore.Components.Web.dll",
+        "lib/net9.0/Microsoft.AspNetCore.Components.Web.xml",
+        "microsoft.aspnetcore.components.web.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.components.web.nuspec"
+      ]
+    },
+    "Microsoft.AspNetCore.Metadata/9.0.5": {
+      "sha512": "E4lbYlraZfZLvWgliUEtrqKt42++Yh9mpGKLyGHPGo1FpbZrXF/x+fOg5dbe22bnuosgWn3cj30566XKdwiodw==",
+      "type": "package",
+      "path": "microsoft.aspnetcore.metadata/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net462/Microsoft.AspNetCore.Metadata.dll",
+        "lib/net462/Microsoft.AspNetCore.Metadata.xml",
+        "lib/net9.0/Microsoft.AspNetCore.Metadata.dll",
+        "lib/net9.0/Microsoft.AspNetCore.Metadata.xml",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.dll",
+        "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.xml",
+        "microsoft.aspnetcore.metadata.9.0.5.nupkg.sha512",
+        "microsoft.aspnetcore.metadata.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore/9.0.8": {
+      "sha512": "bNGdPhN762+BIIO5MFYLjafRqkSS1MqLOc/erd55InvLnFxt9H3N5JNsuag1ZHyBor1VtD42U0CHpgqkWeAYgQ==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "buildTransitive/net8.0/Microsoft.EntityFrameworkCore.props",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.dll",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.xml",
+        "microsoft.entityframeworkcore.9.0.8.nupkg.sha512",
+        "microsoft.entityframeworkcore.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.Abstractions/9.0.8": {
+      "sha512": "B2yfAIQRRAQ4zvvWqh+HudD+juV3YoLlpXnrog3tU0PM9AFpuq6xo0+mEglN1P43WgdcUiF+65CWBcZe35s15Q==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.abstractions/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "PACKAGE.md",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "lib/net8.0/Microsoft.EntityFrameworkCore.Abstractions.xml",
+        "microsoft.entityframeworkcore.abstractions.9.0.8.nupkg.sha512",
+        "microsoft.entityframeworkcore.abstractions.nuspec"
+      ]
+    },
+    "Microsoft.EntityFrameworkCore.Analyzers/9.0.8": {
+      "sha512": "2EYStCXt4Hi9p3J3EYMQbItJDtASJd064Kcs8C8hj8Jt5srILrR9qlaL0Ryvk8NrWQoCQvIELsmiuqLEZMLvGA==",
+      "type": "package",
+      "path": "microsoft.entityframeworkcore.analyzers/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "analyzers/dotnet/cs/Microsoft.EntityFrameworkCore.Analyzers.dll",
+        "docs/PACKAGE.md",
+        "microsoft.entityframeworkcore.analyzers.9.0.8.nupkg.sha512",
+        "microsoft.entityframeworkcore.analyzers.nuspec"
+      ]
+    },
+    "Microsoft.Extensions.Caching.Abstractions/9.0.8": {
+      "sha512": "4h7bsVoKoiK+SlPM+euX/ayGnKZhl47pPCidLTiio9xyG+vgVVfcYxcYQgjm0SCrdSxjG0EGIAKF8EFr3G8Ifw==",
+      "type": "package",
+      "path": "microsoft.extensions.caching.abstractions/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Caching.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Abstractions.xml",
+        "microsoft.extensions.caching.abstractions.9.0.8.nupkg.sha512",
+        "microsoft.extensions.caching.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Caching.Memory/9.0.8": {
+      "sha512": "grR+oPyj8HVn4DT8CFUUdSw2pZZKS13KjytFe4txpHQliGM1GEDotohmjgvyl3hm7RFB3FRqvbouEX3/1ewp5A==",
+      "type": "package",
+      "path": "microsoft.extensions.caching.memory/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Caching.Memory.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Caching.Memory.targets",
+        "lib/net462/Microsoft.Extensions.Caching.Memory.dll",
+        "lib/net462/Microsoft.Extensions.Caching.Memory.xml",
+        "lib/net8.0/Microsoft.Extensions.Caching.Memory.dll",
+        "lib/net8.0/Microsoft.Extensions.Caching.Memory.xml",
+        "lib/net9.0/Microsoft.Extensions.Caching.Memory.dll",
+        "lib/net9.0/Microsoft.Extensions.Caching.Memory.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Memory.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Caching.Memory.xml",
+        "microsoft.extensions.caching.memory.9.0.8.nupkg.sha512",
+        "microsoft.extensions.caching.memory.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection/9.0.8": {
+      "sha512": "JJjI2Fa+QtZcUyuNjbKn04OjIUX5IgFGFu/Xc+qvzh1rXdZHLcnqqVXhR4093bGirTwacRlHiVg1XYI9xum6QQ==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.xml",
+        "microsoft.extensions.dependencyinjection.9.0.8.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.DependencyInjection.Abstractions/9.0.8": {
+      "sha512": "xY3lTjj4+ZYmiKIkyWitddrp1uL5uYiweQjqo4BKBw01ZC4HhcfgLghDpPZcUlppgWAFqFy9SgkiYWOMx365pw==",
+      "type": "package",
+      "path": "microsoft.extensions.dependencyinjection.abstractions/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.DependencyInjection.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.DependencyInjection.Abstractions.xml",
+        "microsoft.extensions.dependencyinjection.abstractions.9.0.8.nupkg.sha512",
+        "microsoft.extensions.dependencyinjection.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Logging/9.0.8": {
+      "sha512": "Z/7ze+0iheT7FJeZPqJKARYvyC2bmwu3whbm/48BJjdlGVvgDguoCqJIkI/67NkroTYobd5geai1WheNQvWrgA==",
+      "type": "package",
+      "path": "microsoft.extensions.logging/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Logging.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.targets",
+        "lib/net462/Microsoft.Extensions.Logging.dll",
+        "lib/net462/Microsoft.Extensions.Logging.xml",
+        "lib/net8.0/Microsoft.Extensions.Logging.dll",
+        "lib/net8.0/Microsoft.Extensions.Logging.xml",
+        "lib/net9.0/Microsoft.Extensions.Logging.dll",
+        "lib/net9.0/Microsoft.Extensions.Logging.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Logging.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Logging.xml",
+        "microsoft.extensions.logging.9.0.8.nupkg.sha512",
+        "microsoft.extensions.logging.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Logging.Abstractions/9.0.8": {
+      "sha512": "pYnAffJL7ARD/HCnnPvnFKSIHnTSmWz84WIlT9tPeQ4lHNiu0Az7N/8itihWvcF8sT+VVD5lq8V+ckMzu4SbOw==",
+      "type": "package",
+      "path": "microsoft.extensions.logging.abstractions/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "analyzers/dotnet/roslyn3.11/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn3.11/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn3.11/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn4.0/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.0/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Logging.Generators.dll",
+        "analyzers/dotnet/roslyn4.4/cs/cs/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/de/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/es/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/fr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/it/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ja/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ko/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pl/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pt-BR/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ru/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/tr/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hans/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hant/Microsoft.Extensions.Logging.Generators.resources.dll",
+        "buildTransitive/net461/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net462/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/net8.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "buildTransitive/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.targets",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net462/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net8.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/net9.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.xml",
+        "microsoft.extensions.logging.abstractions.9.0.8.nupkg.sha512",
+        "microsoft.extensions.logging.abstractions.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Options/9.0.8": {
+      "sha512": "OmTaQ0v4gxGQkehpwWIqPoEiwsPuG/u4HUsbOFoWGx4DKET2AXzopnFe/fE608FIhzc/kcg2p8JdyMRCCUzitQ==",
+      "type": "package",
+      "path": "microsoft.extensions.options/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "analyzers/dotnet/roslyn4.4/cs/Microsoft.Extensions.Options.SourceGeneration.dll",
+        "analyzers/dotnet/roslyn4.4/cs/cs/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/de/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/es/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/fr/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/it/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ja/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ko/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pl/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/pt-BR/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/ru/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/tr/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hans/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "analyzers/dotnet/roslyn4.4/cs/zh-Hant/Microsoft.Extensions.Options.SourceGeneration.resources.dll",
+        "buildTransitive/net461/Microsoft.Extensions.Options.targets",
+        "buildTransitive/net462/Microsoft.Extensions.Options.targets",
+        "buildTransitive/net8.0/Microsoft.Extensions.Options.targets",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Options.targets",
+        "buildTransitive/netstandard2.0/Microsoft.Extensions.Options.targets",
+        "lib/net462/Microsoft.Extensions.Options.dll",
+        "lib/net462/Microsoft.Extensions.Options.xml",
+        "lib/net8.0/Microsoft.Extensions.Options.dll",
+        "lib/net8.0/Microsoft.Extensions.Options.xml",
+        "lib/net9.0/Microsoft.Extensions.Options.dll",
+        "lib/net9.0/Microsoft.Extensions.Options.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Options.xml",
+        "lib/netstandard2.1/Microsoft.Extensions.Options.dll",
+        "lib/netstandard2.1/Microsoft.Extensions.Options.xml",
+        "microsoft.extensions.options.9.0.8.nupkg.sha512",
+        "microsoft.extensions.options.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.Extensions.Primitives/9.0.8": {
+      "sha512": "tizSIOEsIgSNSSh+hKeUVPK7xmTIjR8s+mJWOu1KXV3htvNQiPMFRMO17OdI1y/4ZApdBVk49u/08QGC9yvLug==",
+      "type": "package",
+      "path": "microsoft.extensions.primitives/9.0.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "PACKAGE.md",
+        "THIRD-PARTY-NOTICES.TXT",
+        "buildTransitive/net461/Microsoft.Extensions.Primitives.targets",
+        "buildTransitive/net462/_._",
+        "buildTransitive/net8.0/_._",
+        "buildTransitive/netcoreapp2.0/Microsoft.Extensions.Primitives.targets",
+        "lib/net462/Microsoft.Extensions.Primitives.dll",
+        "lib/net462/Microsoft.Extensions.Primitives.xml",
+        "lib/net8.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net8.0/Microsoft.Extensions.Primitives.xml",
+        "lib/net9.0/Microsoft.Extensions.Primitives.dll",
+        "lib/net9.0/Microsoft.Extensions.Primitives.xml",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.dll",
+        "lib/netstandard2.0/Microsoft.Extensions.Primitives.xml",
+        "microsoft.extensions.primitives.9.0.8.nupkg.sha512",
+        "microsoft.extensions.primitives.nuspec",
+        "useSharedDesignerContext.txt"
+      ]
+    },
+    "Microsoft.JSInterop/9.0.5": {
+      "sha512": "ji4fQKbUUZiq3lmzVBMvp15VgBtEyfR51NrmEjo6qnD97Jf1R6C6QkSMjwUO8bw5NZIDRtmPCYurypB3W5AMEg==",
+      "type": "package",
+      "path": "microsoft.jsinterop/9.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net9.0/Microsoft.JSInterop.dll",
+        "lib/net9.0/Microsoft.JSInterop.xml",
+        "microsoft.jsinterop.9.0.5.nupkg.sha512",
+        "microsoft.jsinterop.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net9.0": [
+      "Blazor.Bootstrap >= 3.4.0",
+      "BlazorMonaco >= 3.3.0",
+      "Microsoft.AspNetCore.Components.Web >= 9.0.5",
+      "Microsoft.EntityFrameworkCore >= 9.0.8",
+      "Microsoft.EntityFrameworkCore.Abstractions >= 9.0.8"
+    ]
+  },
+  "packageFolders": {
+    "/home/miku/.nuget/packages/": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj",
+      "projectName": "Kmila.Shared",
+      "projectPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/Kmila.Shared.csproj",
+      "packagesPath": "/home/miku/.nuget/packages/",
+      "outputPath": "/mnt/ssd1tb/Codigos/Kmila-9s/App/Kmila/Kmila.Shared/obj/",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "/home/miku/.nuget/NuGet/NuGet.Config"
+      ],
+      "originalTargetFrameworks": [
+        "net9.0"
+      ],
+      "sources": {
+        "/home/miku/nuget-local": {},
+        "/usr/share/dotnet/library-packs": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
+      },
+      "SdkAnalysisLevel": "9.0.300"
+    },
+    "frameworks": {
+      "net9.0": {
+        "targetAlias": "net9.0",
+        "dependencies": {
+          "Blazor.Bootstrap": {
+            "target": "Package",
+            "version": "[3.4.0, )"
+          },
+          "BlazorMonaco": {
+            "target": "Package",
+            "version": "[3.3.0, )"
+          },
+          "Microsoft.AspNetCore.Components.Web": {
+            "target": "Package",
+            "version": "[9.0.5, )"
+          },
+          "Microsoft.EntityFrameworkCore": {
+            "target": "Package",
+            "version": "[9.0.8, )"
+          },
+          "Microsoft.EntityFrameworkCore.Abstractions": {
+            "target": "Package",
+            "version": "[9.0.8, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.304/PortableRuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

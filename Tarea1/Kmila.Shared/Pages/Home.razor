@@ -1,0 +1,58 @@
+﻿@page "/"
+@using Kmila.Shared.Services
+
+<h1>Hello, world!</h1>
+<style>
+    #editor {
+        height: 350px;
+    }
+</style>
+<div style="height: 500px;">
+    <StandaloneCodeEditor @ref="editor" 
+        Id="editor"
+        ConstructionOptions="EditorConstructionOptions" 
+    />
+</div>
+@code {
+    private StandaloneCodeEditor editor = new();
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new()
+        {
+            AutomaticLayout = true,
+            Language="vhdl",
+            FontSize = 14,
+            TabSize = 4,
+            InsertSpaces = true,
+            WordWrap = "on",
+            ScrollBeyondLastLine = false,
+            RenderWhitespace = "selection",
+            Value = 
+@"-- VHDL Example
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity example is
+    port (
+        clk : in STD_LOGIC;
+        reset : in STD_LOGIC;
+        data_in : in STD_LOGIC_VECTOR(7 downto 0);
+        data_out : out STD_LOGIC_VECTOR(7 downto 0)
+    );
+end entity example;
+
+architecture behavioral of example is
+begin
+    process(clk, reset)
+    begin
+        if reset = '1' then
+            data_out <= (others => '0');
+        elsif rising_edge(clk) then
+            data_out <= data_in;
+        end if;
+    end process;
+end architecture behavioral;",
+            
+        };
+    }
+}
