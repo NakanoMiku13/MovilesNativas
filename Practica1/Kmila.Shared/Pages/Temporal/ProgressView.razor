@@ -1,0 +1,51 @@
+@page "/progress-view"
+
+<h3>Vista de Progress Bar</h3>
+<p>
+    Esta vista muestra una <b>barra de progreso</b> (<i>Progress Bar</i>) que se utiliza
+    para representar visualmente el avance de una tarea.  
+</p>
+<p>
+    Mediante los botones puedes <b>incrementar</b> o <b>decrementar</b> el valor de la barra,
+    el cual se almacena en la variable <code>_progress</code>.
+</p>
+
+<div class="mb-3">
+    <Button Color="ButtonColor.Success" Outline=true @onclick="Incrementar">
+        Incrementar
+    </Button>
+    <Button Color="ButtonColor.Danger" Outline=true @onclick="Decrementar" class="ms-2">
+        Decrementar
+    </Button>
+</div>
+
+<ProgressBar 
+    Min="0" 
+    Max="100" 
+    Value="_progress" 
+    Striped="true" 
+    Animated="true"
+    Width=@_progress
+    Label=@_progressText
+    Color="ProgressColor.Success"
+/>
+
+<p><b>Progreso actual:</b> @_progress %</p>
+
+@code {
+    private int _progress = 0;
+    private string _progressText = "";
+    private void Incrementar()
+    {
+        if (_progress < 100)
+            _progress += 10;
+        _progressText = $"{_progress} %";
+    }
+
+    private void Decrementar()
+    {
+        if (_progress > 0)
+            _progress -= 10;
+        _progressText = $"{_progress} %";
+    }
+}
