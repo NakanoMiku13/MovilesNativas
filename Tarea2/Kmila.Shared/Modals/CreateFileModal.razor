@@ -1,0 +1,78 @@
+@if(Project != null){
+    <EditForm class="row" EditContext="_context" OnValidSubmit="CreateFileAsync">
+        <DataAnnotationsValidator />
+        <div class="col-sm-12 col-md-6 my-3">
+            <div class="form-floating mb-3">
+                <input type="text" class="form-control" id="InputProjectFileName" placeholder="File name" @bind=_projectFile.FileName>
+                <label for="InputProjectFileName">File Name</label>
+                <ValidationMessage For="@(() => _projectFile.FileName)" />
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 my-3">
+            <div class="form-floating">
+                <select class="form-control" id="extentionType" aria-label="Select a valid extention file" required @bind=_extention>
+                    <option selected disabled>Choose one...</option>
+                    <option value="vhdl">VHDL</option>
+                    <option value="txt">TXT</option>
+                    <option value="md">MD</option>
+                </select>
+                <label for="extentionType">Select an extention</label>
+            </div>
+        </div>
+
+        <Button
+            Outline=true
+            TooltipTitle="This project will be stored on the base program path, you can download it later"
+            Color="ButtonColor.Success"
+            Type="ButtonType.Submit"
+            Disabled="_creatingFile"
+            Loading="_creatingFile"
+        >
+            Create file
+        </Button>
+    </EditForm>
+}else{
+    <p>Project not found :(</p>
+}
+
+@code{
+    [Parameter]
+    public Project Project { get; set; } = null!;
+    [Parameter]
+    public EventCallback OnProjectFileCreated { get; set; }
+    [Parameter]
+    public string EditorContent { get; set; } = string.Empty;
+    private ProjectFile _projectFile = new();
+    private EditContext _context = default!;
+    private string _extention = "txt";
+    private bool _creatingFile = false;
+    protected override void OnParametersSet(){
+        _context = new(_projectFile);
+    }
+    private async Task CreateFileAsync(){
+        _creatingFile = true;
+        StateHasChanged();
+        try{
+            if(_context.Validate()){
+                _projectFile.Content = EditorContent;
+                _projectFile.Project = Project;
+                _projectFile.FileName = $"{_projectFile.FileName}.{_extention}";
+                var result = await ProjectFiles.CreateAsync(_projectFile);
+                ToastService.Notify(Message(
+                    result ? "File created" : "Error",
+                    result ? $"File {_projectFile.FileName} created" : $"Something fail while creating the file: {ProjectFiles.LastError}",
+                    result ? ToastType.Success : ToastType.Danger
+                ));
+                if(result) await OnProjectFileCreated.InvokeAsync();
+                _projectFile = new();
+            }else{
+                ToastService.Notify(Message("Error", "Some fields are missing or are incorrect", ToastType.Danger));
+            }
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+        }finally{
+            _creatingFile = false;
+            StateHasChanged();
+        }
+    }
+}
