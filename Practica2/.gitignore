@@ -1,0 +1,6 @@
+bin/
+obj/
+*.Development.json
+.vscode
+*.csproj.user
+*.db

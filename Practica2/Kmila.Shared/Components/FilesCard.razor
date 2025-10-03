@@ -1,0 +1,117 @@
+<div class="card h-100">
+    <div class="card-body">
+        <h5 class="card-title">Project Files</h5>
+        <Grid TItem="ProjectFile"
+            AllowFiltering="true"
+            AllowPaging="true"
+            AllowSorting="true"
+            Class="table table-hover table-bordered table-striped"
+            Data="_projectFiles"
+            PageSize="15"
+            Responsive="true">
+
+            <GridColumns>
+                <GridColumn TItem="ProjectFile" HeaderText="File" PropertyName="FileName" SortKeySelector="item => item.FileName">
+                    @if(_selectedFile?.Id == context.Id){
+                        <Tooltip Title="Selected file">
+                            <Badge
+                                Color="BadgeColor.Success"
+                            >
+                                <Icon Name='context.FileName.EndsWith(".txt") ? 
+                                    IconName.FileTypeTxt :
+                                        context.FileName.EndsWith(".md") ?
+                                    IconName.FileTypeMd :
+                                    IconName.FileCode'/>
+                                @context.FileName.Substring(0, context.FileName.LastIndexOf("."))
+                            </Badge>
+                        </Tooltip>
+                    }else{
+                        <Tooltip Title="@context.FileName">
+                            <Icon Name='context.FileName.EndsWith(".txt") ? 
+                                IconName.FileTypeTxt :
+                                    context.FileName.EndsWith(".md") ?
+                                IconName.FileTypeMd :
+                                IconName.FileCode'/>
+                            @context.FileName.Substring(0, context.FileName.LastIndexOf("."))
+                        </Tooltip>
+                    }
+                    
+                </GridColumn>
+                <GridColumn TItem="ProjectFile" HeaderText="Options" Sortable=false Filterable=false>
+                    <div class="btn-group">
+                        <Button
+                            Outline=true
+                            Color="ButtonColor.Info"
+                            TooltipTitle="Open current file"
+                            Type="ButtonType.Button"
+                            @onclick="async () => {
+                                _selectedFile = context;
+                                await OnProjectFileClicked.InvokeAsync(context);
+                            }"
+                        >
+                            <Icon Name="IconName.Info"/>
+                        </Button>
+                        <Button
+                            Outline=true
+                            Color="ButtonColor.Danger"
+                            TooltipTitle="Remove file"
+                            Type="ButtonType.Button"
+                            @onclick="async () => await RemoveFileAsync(context)"
+                        >
+                            <Icon Name="IconName.Trash"/>
+                        </Button>
+                    </div>
+                </GridColumn>
+            </GridColumns>
+
+        </Grid>
+    </div>
+</div>
+<ConfirmDialog @ref=_removeFileDialog/>
+@code{
+    [Parameter]
+    public Project Project { get; set; } = null!;
+    [Parameter]
+    public EventCallback<ProjectFile> OnProjectFileClicked { get; set; } = new();
+    [Parameter]
+    public EventCallback<ProjectFile> OnProjectFileRemoved { get; set; } = new();
+    private List<ProjectFile> _projectFiles { get; set; } = new();
+    private ConfirmDialog _removeFileDialog = new();
+    private ProjectFile? _selectedFile = null;
+    protected override async Task OnInitializedAsync(){
+        if(Project != null){
+            _projectFiles = await ProjectFiles.GetProjectFilesAsync(Project);
+        }
+    }
+    public void SetDefaultFile(ProjectFile file){
+        try{
+            _selectedFile = _projectFiles.FirstOrDefault(p => p.Id == file.Id);
+        }finally{
+            InvokeAsync(StateHasChanged);
+        }
+        
+    }
+    public async Task ReloadFiles(){
+        if(Project != null){
+            _projectFiles = await ProjectFiles.GetProjectFilesAsync(Project);
+        }
+    }
+    private async Task RemoveFileAsync(ProjectFile file){
+        ConfirmDialogOptions options = new(){
+            YesButtonColor = ButtonColor.Danger,
+            NoButtonColor = ButtonColor.Success,
+            AutoFocusYesButton = false
+        };
+        var confirmation = await _removeFileDialog.ShowAsync(
+            "You are going to remove this file",
+            "This changes can not be undone after removal",
+            "Are you sure that you want to continue?",
+            options
+        );
+        if(confirmation){
+            await OnProjectFileRemoved.InvokeAsync(file);
+        }else{
+            ToastService.Notify(Message("Message", "File not removed", ToastType.Info));
+        }
+    }
+}
