@@ -1,0 +1,67 @@
+﻿@page "/"
+@implements IDisposable
+<h1>Hello, world!</h1>
+<div class="row">
+    <div class="col">
+        <div class="card h-100 mb-3 my-3">
+            <div class="card-header">Accelerometer</div>
+            <div class="card-body">
+                <p class="card-text">Acceleration: @_acceleration</p>
+                <p class="card-text">X Acceleration: @_x</p>
+                <p class="card-text">Y Acceleration: @_y</p>
+                <p class="card-text">Z Acceleration: @_z</p>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card h-100 text-bg-@(_torchStatus ? "success" : "secondary") mb-3 my-3" @onclick="TorchStatusChanged">
+            <div class="card-header">Torch</div>
+            <div class="card-body">
+                <h5 class="card-title">@(_torchStatus ? "On" : "Off") 
+                    <Icon Name="@(_torchStatus ? IconName.LightbulbFill : IconName.LightbulbOffFill)"/>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    private bool _torchStatus = false;
+    private double _acceleration, _x, _y, _z;
+    protected override async Task OnInitializedAsync(){
+        AccelerometerRepository.OnAccelerationChanged += OnAccelerationChanged;
+        AccelerometerRepository.OnAccelerometerChanged += OnAccelerometerChanged;
+    }
+    private async Task TorchStatusChanged(){
+        if(!await Flashlight.IsSupportedAsync()){
+            ToastService.Notify(Message("Torch is not supported on this device", "Error", ToastType.Danger));
+            return;
+        }else{
+            _torchStatus = !_torchStatus;
+            if(!_torchStatus)
+                await Flashlight.TurnOffAsync();
+            else
+                await Flashlight.TurnOnAsync();
+        }
+        StateHasChanged();
+    }
+    private void OnAccelerationChanged(double value){
+        InvokeAsync(() => {
+            _acceleration = value;
+            StateHasChanged();
+        });
+    }
+    private void OnAccelerometerChanged((double, double, double) vectors){
+        InvokeAsync(() => {
+            _x = vectors.Item1;
+            _y = vectors.Item2;
+            _z = vectors.Item3;
+            StateHasChanged();
+        });   
+    }
+    public void Dispose(){
+        AccelerometerRepository.OnAccelerationChanged += OnAccelerationChanged;
+        AccelerometerRepository.OnAccelerometerChanged += OnAccelerometerChanged;
+    }
+
+}
