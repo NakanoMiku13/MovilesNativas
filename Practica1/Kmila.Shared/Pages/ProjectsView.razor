@@ -1,15 +1,112 @@
 @page "/projects"
-<div class="d-grid gap-2">
+<div class="d-grid gap-2 my-3">
     <Button
         TooltipTitle="Create new project"
         Color="ButtonColor.Success"
         Outline=true
-
+        @onclick=CreateProjectAsync
     >
         Create new project 
         <Icon Name="IconName.FolderPlus"/>
     </Button>
 </div>
+<Grid TItem="Project"
+      Data=@_projects
+      AllowFiltering="true"
+      AllowPaging="true"
+      AllowSorting="true"
+      Class="table table-hover table-bordered table-striped my-3"
+      PageSize="35"
+      Responsive="true">
+
+    <GridColumns>
+        <GridColumn TItem="Project" HeaderText="Project Name" PropertyName="Name" SortKeySelector="item => item.Name">
+            @context.Name
+        </GridColumn>
+        <GridColumn TItem="Project" HeaderText="Description" PropertyName="Description" SortKeySelector="item => item.Description">
+            @context.Description
+        </GridColumn>
+        <GridColumn TItem="Project" HeaderText="Created" PropertyName="CreationTime" SortKeySelector="item => item.CreationTime">
+            @context.CreationTime
+        </GridColumn>
+        <GridColumn TItem="Project" HeaderText="Options" Sortable=false Filterable=false>
+            <div class="btn-group">
+                <Button
+                    Outline=true
+                    Color="ButtonColor.Info"
+                    TooltipTitle="Open project"
+                    Type="ButtonType.Link"
+                    @onclick='() => NavigationManager.NavigateTo($"/editor/{context.Id}")'
+                >
+                    <Icon Name="IconName.Folder2Open"/>
+                </Button>
+                <Button
+                    Outline=true
+                    Color="ButtonColor.Warning"
+                    TooltipTitle="Edit project"
+                    Type="ButtonType.Button"
+                >
+                    <Icon Name="IconName.PencilSquare"/>
+                </Button>
+                <Button
+                    Outline=true
+                    Color="ButtonColor.Danger"
+                    TooltipTitle="Remove project"
+                    Type="ButtonType.Button"
+                    @onclick="async () => await RemoveProjectAsync(context)"
+                >
+                    <Icon Name="IconName.Trash"/>
+                </Button>
+            </div>
+        </GridColumn>
+    </GridColumns>
+
+</Grid>
+<Modal Size="ModalSize.Large" IsScrollable=true @ref="_newProjectModal"/>
+<ConfirmDialog @ref="_removeProjectDialog" />
+
 @code{
-    
+    private Modal _newProjectModal = new();
+    private ConfirmDialog _removeProjectDialog = new();
+    private List<Project> _projects = new();
+    protected override async Task OnInitializedAsync(){
+        _projects = await Projects.GetListAsync();
+    }
+    private async Task RemoveProjectAsync(Project project){
+        ConfirmDialogOptions options = new(){
+            YesButtonColor = ButtonColor.Danger,
+            NoButtonColor = ButtonColor.Success,
+            AutoFocusYesButton = false,
+            YesButtonText = "Remove project",
+            NoButtonText = "Go back"
+        };
+        var confirmation = await _removeProjectDialog.ShowAsync(
+            title: $"Removing project: {project.Name}",
+            message1: $"You are going to remove the project in the path: {project.BasePath}, and will remove all containning files.",
+            message2: "Be careful, this changes can not be undone, are you sure that you want to continue?",
+            confirmDialogOptions: options
+        );
+        if(confirmation){
+            var result = await Projects.RemoveAsync(project);
+            ToastService.Notify(Message(
+                result ? "Project removed" : "Something fail",
+                result ? "Your project have been removed, the next, will be better." : $"An error ocurr during the removing, maybe you have not to remove it: {Projects.LastError}",
+                result ? ToastType.Success : ToastType.Warning
+            ));
+        }else{
+            ToastService.Notify(Message("Project not removed", "Good choise, save your projects, they are part of you."));
+        }
+        _projects = await Projects.GetListAsync();
+    }
+    private async Task CreateProjectAsync(){
+        Dictionary<string, object> parameters = new(){
+            {"OnProjectCreated", EventCallback.Factory.Create<bool>(this, OnProjectCreatedAsync)}
+        };
+        await _newProjectModal.ShowAsync<ProjectDetailsModal>("New project", parameters: parameters);
+    }
+    private async Task OnProjectCreatedAsync(bool status){
+        _projects = await Projects.GetListAsync();
+        await _newProjectModal.HideAsync();
+        await InvokeAsync(StateHasChanged);
+    }
 }

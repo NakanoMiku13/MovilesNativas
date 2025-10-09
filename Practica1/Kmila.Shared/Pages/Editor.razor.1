@@ -1,0 +1,177 @@
+﻿@page "/editor/{ProjectId}"
+@using Kmila.Shared.Services
+
+@if(_projectId != -1 && _project != null){
+    <style>
+        .editor {
+            height: inherit;
+        }
+    </style>
+    <h2>@_project.Name</h2>
+    <div class="row my-3">
+        <div class="col-lg-10 col-md-6 col-sm-12">
+            <div class="card h-100 rounded">
+                <StandaloneCodeEditor @ref="_editor" 
+                    CssClass="editor"
+                    ConstructionOptions="EditorConstructionOptions" 
+                />
+            </div>
+        </div>
+        <div class="col-lg-2 col-md-6 col-sm-12">
+            <div class="card h-100">
+                <ButtonCollapse 
+                    @ref="_buttonsCollapse"
+                    OnNewFileButtonClicked="ShowCreateFileModalAsync"
+                    OnSaveFileButtonClicked="OnSaveFile"
+                    OnBuildButtonClicked="OnBuildRequested"
+                />
+            </div>
+        </div>
+    </div>
+    <div class="row my-3">
+        <div class="col-6">
+            <div class="card h-100">
+                <p>Hello world</p>
+            </div>
+        </div>
+        <div class="col-6">
+            <FilesCard 
+                @ref="_filesCard"
+                OnProjectFileClicked="OnProjectFileOpened"
+                Project="_project"/>
+        </div>
+    </div>
+    <script src="js/vhdl.js"></script>
+}
+<Modal @ref="_createFileModal" />
+@code {
+    [Parameter]
+    public string ProjectId { get; set; } = string.Empty;
+    private int _projectId = -1;
+    private Project _project = null!;
+    private FilesCard _filesCard = new();
+    private ButtonCollapse _buttonsCollapse = new();
+    private StandaloneCodeEditor _editor = new();
+    private Modal _createFileModal = new();
+    private ProjectFile _openedFile = null!;
+    protected override async Task OnInitializedAsync(){
+        if(String.IsNullOrEmpty(ProjectId)){
+            ToastService.Notify(Message("Project not set", "Error opening the project", ToastType.Danger));
+        }else{
+            _projectId = int.Parse(ProjectId);
+            _project = await Projects.GetByAsync(_projectId);
+        }
+    }
+    private async Task ShowCreateFileModalAsync(){
+        Dictionary<string, object> parameters = new(){
+            { "Project", _project },
+            { "EditorContent", await _editor.GetValue() },
+            { "OnProjectFileCreated", EventCallback.Factory.Create(this, OnFileCreatedAsync)}
+
+        };
+        await _createFileModal.ShowAsync<CreateFileModal>("Creating new file", parameters: parameters);
+    }
+    private async Task OnBuildRequested(){
+        try{
+            if(_openedFile != null){
+                //ProgramBuilder builder = new();
+                //var result = builder.Build(_openedFile);
+                bool result = true;
+                ToastService.Notify(Message(
+                    result ? "Correct" : "Error",
+                    result ? "Program build succesfully" : $"Error",
+                    result ? ToastType.Success : ToastType.Danger
+                ));
+            }else{
+                ToastService.Notify(Message("Entry point not found", "To build you must open first the entry point file", ToastType.Warning));
+            }
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+        }finally{
+            await _buttonsCollapse.ReleaseBuild();
+        }
+        
+
+    }
+    private async Task OnSaveFile(){
+        try{
+            if(_openedFile == null){
+                ToastService.Notify(Message("Error", "File not selected, please create a new file, the current editor content will be saved.", ToastType.Warning));
+                await ShowCreateFileModalAsync();
+            }else{
+                _openedFile.Content = await _editor.GetValue();
+                _openedFile.Project = _project;
+                var result = await ProjectFiles.UpdateAsync(_openedFile);
+                ToastService.Notify(Message(
+                    result ? "Correct" : "Error",
+                    result ? "File saved correctly" : $"Something fail while saving file: {ProjectFiles.LastError}",
+                    result ? ToastType.Success : ToastType.Danger
+                ));
+            }
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+        }
+    }
+    private async Task OnFileRemoved(ProjectFile file){
+        try{
+            if(file != null){
+            //    var result = await _
+            }
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+        }
+    }
+    private async Task OnProjectFileOpened(ProjectFile file){
+        try{
+            _openedFile = file;
+            await _editor.SetValue(file.Content);
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+            _openedFile = null!;
+        }
+    }
+    private async Task OnFileCreatedAsync(){
+        await _filesCard.ReloadFiles();
+        await _createFileModal.HideAsync();
+    }
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        return new()
+        {
+            AutomaticLayout = true,
+            Language="vhdl",
+            FontSize = 14,
+            TabSize = 4,
+            InsertSpaces = true,
+            WordWrap = "on",
+            ScrollBeyondLastLine = false,
+            RenderWhitespace = "selection",
+            Value = 
+@"-- This is a VHDL Sample code, do not represent a file
+library IEEE;
+use IEEE.STD_LOGIC_1164.ALL;
+
+entity example is
+    port (
+        clk : in STD_LOGIC;
+        reset : in STD_LOGIC;
+        data_in : in STD_LOGIC_VECTOR(7 downto 0);
+        data_out : out STD_LOGIC_VECTOR(7 downto 0)
+    );
+end entity example;
+
+architecture behavioral of example is
+begin
+    process(clk, reset)
+    begin
+        if reset = '1' then
+            data_out <= (others => '0');
+        elsif rising_edge(clk) then
+            data_out <= data_in;
+        end if;
+    end process;
+end architecture behavioral;",
+            
+        };
+    }
+}

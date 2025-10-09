@@ -11,5 +11,14 @@
 @using BlazorMonaco
 @using BlazorMonaco.Editor
 @using BlazorMonaco.Languages
+@using Kmila.Shared.Modals
+@using Kmila.Shared.Models
+@using Kmila.Shared.Components
+@using Kmila.Shared.Services
+@using Kmila.Shared.Repositories
+@using static Kmila.Shared.Models.ToastMessages
+@inject Projects Projects
+@inject ProjectFiles ProjectFiles
 @inject IJSRuntime JS
 @inject ToastService ToastService
+@inject NavigationManager NavigationManager

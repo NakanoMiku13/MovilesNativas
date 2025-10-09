@@ -1,7 +1,6 @@
 using Kmila.Shared.Data;
 using Kmila.Shared.Interfaces;
 using Kmila.Shared.Models;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Kmila.Shared.Repositories;
@@ -16,6 +15,7 @@ public class Projects : IRepository<Project>
     {
         _logger = logger;
         _applicationDbContext = applicationDbContext;
+        //_ = _applicationDbContext.InitDBAsync();
     }
     public async Task<bool> CreateAsync(Project project)
     {
@@ -23,8 +23,7 @@ public class Projects : IRepository<Project>
         try
         {
             var oldProject = await _applicationDbContext.Projects.FirstOrDefaultAsync(p =>
-                p.Name.ToLower().Equals(project.Name.ToLower()) && p.BasePath.ToLower().Equals(project.BasePath.ToLower()),
-                _cts.Token
+                p.Name.ToLower().Equals(project.Name.ToLower()) && p.BasePath.ToLower().Equals(project.BasePath.ToLower())
             );
             if (oldProject != null)
             {
@@ -32,8 +31,7 @@ public class Projects : IRepository<Project>
                 return false;
             }
             Directory.CreateDirectory(project.BasePath);
-            await _applicationDbContext.Projects.AddAsync(project, _cts.Token);
-            await _applicationDbContext.SaveChangesAsync(_cts.Token);
+            await _applicationDbContext.InsertAsync(project);
             return true;
         }
         catch (Exception ex)
@@ -47,13 +45,13 @@ public class Projects : IRepository<Project>
         LastError = string.Empty;
         try
         {
-            var oldProject = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Id == project.Id, _cts.Token);
+            var oldProject = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Id == project.Id);
             if (oldProject == null)
             {
                 LastError = "Project not registered";
                 return false;
             }
-            if (await _applicationDbContext.Projects.AnyAsync(p => p.BasePath.ToLower() == project.BasePath.ToLower() && p.Id != project.Id))
+            if ((await _applicationDbContext.Projects.ToListAsync()).Any(p => p.BasePath.ToLower() == project.BasePath.ToLower() && p.Id != project.Id))
             {
                 LastError = "Path already in use";
                 return false;
@@ -70,8 +68,7 @@ public class Projects : IRepository<Project>
             oldProject.Name = project.Name;
             oldProject.Description = project.Description;
             oldProject.BasePath = project.BasePath;
-            _applicationDbContext.Projects.Update(project);
-            await _applicationDbContext.SaveChangesAsync(_cts.Token);
+            await _applicationDbContext.UpdateAsync(project);
             return true;
         }
         catch (Exception ex)
@@ -85,13 +82,16 @@ public class Projects : IRepository<Project>
         LastError = string.Empty;
         try
         {
-            var oldProject = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Id == project.Id, _cts.Token);
+            var oldProject = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Id == project.Id);
             if (oldProject == null)
             {
                 LastError = "Project not found";
                 return false;
             }
-            Directory.Delete(oldProject.BasePath, true);
+            if(Directory.Exists(oldProject.BasePath))
+                Directory.Delete(oldProject.BasePath, true);
+            await _applicationDbContext.DeleteAsync(project);
+            return true;
         }
         catch (Exception ex)
         {
@@ -104,20 +104,29 @@ public class Projects : IRepository<Project>
         LastError = string.Empty;
         try
         {
-
+            return await _applicationDbContext.Projects.ToListAsync();
         }
         catch (Exception ex)
         {
             LastError = ex.Message;
         }
-        return null!;
+        return new();
     }
     public async Task<Project> GetByAsync(object id)
     {
         LastError = string.Empty;
         try
         {
-
+            Project project = null!;
+            if (id is int intId)
+                project = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Id == intId);
+            else if(id is string strId)
+                project = await _applicationDbContext.Projects.FirstOrDefaultAsync(p => p.Name.ToLower() == strId.ToLower());
+            if (project == null)
+            {
+                LastError = "Project not found";
+            }
+            return project ?? new();
         }
         catch (Exception ex)
         {

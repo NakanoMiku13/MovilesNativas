@@ -7,10 +7,6 @@
 
     <main>
         <div class="top-row px-4">
-            <ThemeSwitcher OnThemeChanged='async (string e) =>{
-                string theme = e == "dark" ? "vs-dark" : "vs";
-                await BlazorMonaco.Editor.Global.SetTheme(JS, theme);
-            }'/>
         </div>
 
         <article class="content px-4">

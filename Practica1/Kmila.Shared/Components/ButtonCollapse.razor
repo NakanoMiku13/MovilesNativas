@@ -1,0 +1,106 @@
+@namespace Kmila.Shared.Components
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#ExecuteOptionsPanel" aria-expanded="true" aria-controls="ExecuteOptionsPanel">
+            Execute Options
+        </button>
+        </h2>
+        <div id="ExecuteOptionsPanel" class="accordion-collapse collapse show">
+            <div class="accordion-body">
+                <div class="d-grid gap-2 my-3">
+                    <Button
+                        Type="ButtonType.Button"
+                        Color="ButtonColor.Primary"
+                        Outline=true
+                        Disabled=_building
+                        TooltipTitle="Save current file"
+                        @onclick="async () => await OnSaveFileButtonClicked.InvokeAsync()"
+                    >
+                        Save file <Icon Name="IconName.Floppy2"/>
+                    </Button>
+                </div>
+                <div class="d-grid gap-2 my-3">
+                    <Button
+                        Type="ButtonType.Button"
+                        Color="ButtonColor.Secondary"
+                        Outline=true
+                        Disabled=_building
+                        TooltipTitle="Add new file"
+                        @onclick="async () => await OnNewFileButtonClicked.InvokeAsync()"
+                    >
+                        New File <Icon Name="IconName.FileBinary"/>
+                    </Button>
+                </div>
+                <div class="d-grid gap-2 my-3">
+                    <Button
+                        Type="ButtonType.Button"
+                        Color="ButtonColor.Info"
+                        Outline=true
+                        Disabled=_building
+                        TooltipTitle="Execute current program"
+                    >
+                        Execute program <Icon Name="IconName.Play"/>
+                    </Button>
+                </div>
+                <div class="d-grid gap-2 my-3">
+                    <Button
+                        Type="ButtonType.Button"
+                        Color="ButtonColor.Success"
+                        Outline=true
+                        Disabled=_building
+                        Loading=_building
+                        LoadingText="Building program, please wait"
+                        TooltipTitle="Build and validate current program"
+                        @onclick="BuildRequested"
+                    >
+                        Validate program <Icon Name="IconName.Check2All"/>
+                    </Button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#WatcherPanel" aria-expanded="false" aria-controls="WatcherPanel">
+            Watching Variables
+        </button>
+        </h2>
+        <div id="WatcherPanel" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ClockStatesPanel" aria-expanded="false" aria-controls="ClockStatesPanel">
+            Clock states
+        </button>
+        </h2>
+        <div id="ClockStatesPanel" class="accordion-collapse collapse">
+            <div class="accordion-body">
+                
+            </div>
+        </div>
+    </div>
+</div>
+@code{
+    [Parameter]
+    public EventCallback OnNewFileButtonClicked { get; set; }
+    [Parameter]
+    public EventCallback OnSaveFileButtonClicked { get; set; }
+    [Parameter]
+    public EventCallback OnBuildButtonClicked { get; set; }
+    private bool _building = false;
+    private async Task BuildRequested(){
+        _building = true;
+        StateHasChanged();
+        await OnBuildButtonClicked.InvokeAsync();
+        
+    }
+    public async Task ReleaseBuild(){
+        _building = false;
+        StateHasChanged();
+    }
+}

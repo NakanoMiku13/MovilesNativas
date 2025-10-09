@@ -1,18 +1,72 @@
-<form class="row">
-    <div class="col-sm-12 col">
+<EditForm class="row" EditContext="_context" OnValidSubmit="CreateProjectAsync">
+    <DataAnnotationsValidator />
+    <div class="col-sm-12 col-md-6 my-3">
         <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="InputProjectName" placeholder="Project name">
+            <input type="text" class="form-control" id="InputProjectName" placeholder="Project name" @bind=_project.Name>
             <label for="InputProjectName">Project Name</label>
+            <ValidationMessage For="@(() => _project.Name)" />
         </div>
     </div>
-    <div class="col-sm-12 col">
+    <div class="col-sm-12 col-md-6 my-3">
         <div class="form-floating mb-3">
-            <input type="text" class="form-control" id="InputProjectDescription" placeholder="Project Description">
+            <input type="text" class="form-control" id="InputProjectDescription" placeholder="Project Description" @bind="_project.Description">
             <label for="InputProjectDescription">Project Description</label>
         </div>
     </div>
-</form>
+    <Button
+        Outline=true
+        TooltipTitle="This project will be stored on the base program path, you can download it later"
+        Color="ButtonColor.Success"
+        Type="ButtonType.Submit"
+        Disabled="_creatingProject"
+        Loading="_creatingProject"
+    >
+        Create Project
+    </Button>
+</EditForm>
 
 @code{
-    
+    [Parameter]
+    public EventCallback<bool> OnProjectCreated { get; set; }
+    private Project _project = new();
+    private EditContext _context = default!;
+    private bool _creatingProject = false;
+    protected override async Task OnInitializedAsync(){
+        _context = new(_project);
+    }
+    protected override void OnParametersSet(){
+        _project = new();
+        _context = new(_project);
+    }
+    private async Task CreateProjectAsync(){
+        _creatingProject = true;
+        StateHasChanged();
+        try{
+            if(_context.Validate()){
+                string basePath = string.Empty;
+                /*#if WINDOWS || MACCATALYST || ANDROID || IOS
+                    basePath = FileSystem.AppDataDirectory;
+                #else
+                    basePath = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData), "KmilaData");
+                #endif*/
+                string fullPath = Path.Join(basePath, "Projects", _project.Name.Trim().Replace(" ", "").Replace('/', '_').Replace('-', '_'));
+                _project.BasePath = fullPath;
+                var result = await Projects.CreateAsync(_project);
+                ToastService.Notify(Message(
+                    result ? "Project created" : "Error",
+                    result ? $"Project created at: {_project.BasePath}" : $"Something fail while creating the project: {Projects.LastError}",
+                    result ? ToastType.Success : ToastType.Danger
+                ));
+                if(result) await OnProjectCreated.InvokeAsync();
+                _project = new();
+            }else{
+                ToastService.Notify(Message("Error", "Some fields are missing or are incorrect", ToastType.Danger));
+            }
+        }catch(Exception ex){
+            ToastService.Notify(Message("Error", ex.Message, ToastType.Danger));
+        }finally{
+            _creatingProject = false;
+            StateHasChanged();
+        }
+    }
 }

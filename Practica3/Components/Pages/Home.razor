@@ -2,7 +2,7 @@
 @implements IDisposable
 <h1>Hello, world!</h1>
 <div class="row">
-    <div class="col">
+    <div class="col-12">
         <div class="card h-100 mb-3 my-3">
             <div class="card-header">Accelerometer</div>
             <div class="card-body">
@@ -10,6 +10,17 @@
                 <p class="card-text">X Acceleration: @_x</p>
                 <p class="card-text">Y Acceleration: @_y</p>
                 <p class="card-text">Z Acceleration: @_z</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card h-100 mb-3 my-3" @onclick=OnLocationRequested>
+            <div class="card-header">Location</div>
+            <div class="card-body">
+                <p class="card-text">Latitude: @_location.Latitude</p>
+                <p class="card-text">Longitude: @_location.Longitude</p>
+                <p class="card-text">Altitude: @_location.Altitude</p>
+                <p class="card-text">Accuracy: @_location.Accuracy</p>
             </div>
         </div>
     </div>
@@ -27,21 +38,29 @@
 
 @code{
     private bool _torchStatus = false;
+    private Models.Location _location = new();
     private double _acceleration, _x, _y, _z;
     protected override async Task OnInitializedAsync(){
         AccelerometerRepository.OnAccelerationChanged += OnAccelerationChanged;
         AccelerometerRepository.OnAccelerometerChanged += OnAccelerometerChanged;
+        await Permissions.RequestAsync<Permissions.Camera>();
+        await Permissions.RequestAsync<Permissions.LocationAlways>();
+    }
+    private async Task OnLocationRequested(){
+        _location = await Repositories.Location.GetLocationAsync();
+        StateHasChanged();
     }
     private async Task TorchStatusChanged(){
-        if(!await Flashlight.IsSupportedAsync()){
-            ToastService.Notify(Message("Torch is not supported on this device", "Error", ToastType.Danger));
-            return;
-        }else{
-            _torchStatus = !_torchStatus;
-            if(!_torchStatus)
-                await Flashlight.TurnOffAsync();
-            else
+        try
+        {
+            if (_torchStatus)
                 await Flashlight.TurnOnAsync();
+            else
+                await Flashlight.TurnOffAsync();
+        }
+        catch (Exception ex)
+        {
+            ToastService.Notify(Message($"Flashlight error: {ex.Message}", "Error", ToastType.Danger));
         }
         StateHasChanged();
     }
