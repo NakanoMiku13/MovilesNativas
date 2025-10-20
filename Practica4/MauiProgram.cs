@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using Practica4.Services;
 
 namespace Practica4;
 
@@ -16,6 +17,7 @@ public static class MauiProgram
 
 		builder.Services.AddMauiBlazorWebView();
 		builder.Services.AddBlazorBootstrap();
+		builder.Services.AddSingleton<GameService>();
 #if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 		builder.Logging.AddDebug();

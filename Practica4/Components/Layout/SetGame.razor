@@ -1,0 +1,31 @@
+<form @onsubmit="OnFormSubmited">
+    <div class="form-floating mb-3 my-3">
+        <input type="text" class="form-control" id="UserName" placeholder="Set an user name" required @bind=_username/>
+        <label for="UserName">User name</label>
+    </div>
+    @for(int i = 0, k = 0 ; i < 5 ; i ++){
+        for(int j = 0; j < 5 ; j++, k++){
+            <CheckboxInput @bind-Value=_ships[k] Class="mb-3"/>
+        }
+        <br/>
+    }
+    <div class="d-grid gap-2">
+        <Button
+            Color="ButtonColor.Success"
+            Outline=true
+            TooltipTitle="Save current configuration"
+            Type="ButtonType.Button"
+            @onclick="OnFormSubmited"
+        >
+            Save data <Icon Name="IconName.Floppy"/>
+        </Button>
+    </div>
+</form>
+
+@code{
+    private string _username = string.Empty;
+    private bool[] _ships = new bool[25];
+    private async Task OnFormSubmited(){
+        var x = 1;
+    }
+}

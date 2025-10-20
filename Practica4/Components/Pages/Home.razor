@@ -1,13 +1,595 @@
 ﻿@page "/"
+@using BlazorBootstrap
+@inject GameService GameService
+@inject IJSRuntime JSRuntime
 
-@if(!_gameSet){
-    <Button>
-    </Button>
-}else{
+<style>
+    .game-board {
+        display: inline-grid;
+        grid-template-columns: repeat(11, 40px);
+        grid-template-rows: repeat(11, 40px);
+        gap: 1px;
+        background-color: #ddd;
+        padding: 10px;
+        border-radius: 8px;
+    }
 
-}
+    .cell {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        background-color: #f0f8ff;
+        transition: all 0.3s;
+    }
 
+    .cell:hover {
+        background-color: #e0e0e0;
+        transform: scale(1.05);
+    }
 
-@code{
-    private bool _gameSet = false;
+    .cell-label {
+        background-color: transparent !important;
+        border: none !important;
+        font-weight: bold;
+        cursor: default !important;
+    }
+
+    .cell-empty {
+        background-color: #e3f2fd;
+    }
+
+    .cell-ship {
+        background-color: #607d8b;
+    }
+
+    .cell-hit {
+        background-color: #ff5252;
+    }
+
+    .cell-miss {
+        background-color: #90caf9;
+    }
+
+    .cell-preview {
+        background-color: #4caf50;
+        opacity: 0.5;
+    }
+
+    .cell-invalid {
+        background-color: #ff9800;
+        opacity: 0.5;
+    }
+
+    .ship-dock {
+        border: 2px dashed #666;
+        padding: 20px;
+        border-radius: 8px;
+        min-height: 150px;
+        background-color: #f5f5f5;
+    }
+
+    .ship-item {
+        display: inline-flex;
+        align-items: center;
+        padding: 10px;
+        margin: 5px;
+        border: 2px solid #333;
+        border-radius: 8px;
+        cursor: move;
+        background-color: #fff;
+        transition: transform 0.3s;
+    }
+
+    .ship-item:hover {
+        transform: scale(1.05);
+    }
+
+    .ship-item.placed {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .ship-icon {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+
+    .dragging {
+        opacity: 0.5;
+    }
+
+    .drop-zone {
+        background-color: #e8f5e9;
+    }
+
+    .game-stats {
+        background-color: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .turn-indicator {
+        font-size: 1.2em;
+        font-weight: bold;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .player1-turn {
+        background-color: #bbdefb;
+        color: #1565c0;
+    }
+
+    .player2-turn {
+        background-color: #ffcdd2;
+        color: #c62828;
+    }
+</style>
+
+<div class="container-fluid">
+    <h1 class="text-center mb-4">⚓ Battleship Game ⚓</h1>
+
+    @if (GameState == Models.GameState.Setup)
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <Card>
+                    <CardHeader>
+                        <h3>Welcome to Battleship!</h3>
+                    </CardHeader>
+                    <CardBody>
+                        <div class="mb-3">
+                            <label class="form-label">Player 1 Name:</label>
+                            <input type="text" class="form-control" @bind="Player1Name" placeholder="Enter Player 1 name" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Player 2 Name:</label>
+                            <input type="text" class="form-control" @bind="Player2Name" placeholder="Enter Player 2 name" />
+                        </div>
+                        <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="StartGame" 
+                                Disabled="@(string.IsNullOrWhiteSpace(Player1Name) || string.IsNullOrWhiteSpace(Player2Name))">
+                            Start Game
+                        </Button>
+                    </CardBody>
+                </Card>
+            </div>
+        </div>
+    }
+    else if (GameState == Models.GameState.Player1Placing || GameState == Models.GameState.Player2Placing)
+    {
+        var currentPlayer = GameState == Models.GameState.Player1Placing ? 
+            GameService.CurrentSession.Player1 : GameService.CurrentSession.Player2;
+        
+        <Modal @ref="placementModal" IsServiceModal="true" IsStaticBackdrop="true">
+            <HeaderTemplate>
+                <h5>@currentPlayer.Name - Place Your Ships</h5>
+            </HeaderTemplate>
+            <BodyTemplate>
+                <div class="ship-dock mb-3">
+                    <h6>Available Ships (Drag to board):</h6>
+                    <div class="d-flex flex-wrap">
+                        @foreach (var ship in currentPlayer.OwnBoard.Ships.Where(s => !s.IsPlaced))
+                        {
+                            <div class="ship-item" draggable="true" @ondragstart="@(() => StartDrag(ship))" @ondragend="EndDrag">
+                                <span class="ship-icon">@ship.Icon</span>
+                                <div>
+                                    <strong>@ship.Name</strong><br />
+                                    <small>Size: @ship.Size | @ship.Orientation</small>
+                                </div>
+                                <Button Color="ButtonColor.Secondary" Size="ButtonSize.Small" 
+                                        Class="ms-2" @onclick="@(() => RotateShip(ship, currentPlayer))">
+                                    🔄
+                                </Button>
+                            </div>
+                        }
+                    </div>
+                    @if (!currentPlayer.OwnBoard.Ships.Any(s => !s.IsPlaced))
+                    {
+                        <Alert Color="AlertColor.Success">
+                            All ships placed! Click "Confirm Placement" when ready.
+                        </Alert>
+                    }
+                </div>
+
+                <div class="d-flex justify-content-center">
+                    <div class="game-board" @ondrop="@(e => HandleDrop(e))" @ondragover="@(e => AllowDrop(e))">
+                        @for (int row = 0; row < 11; row++)
+                        {
+                            @for (int col = 0; col < 11; col++)
+                            {
+                                int r = row;
+                                int c = col;
+                                
+                                @if (row == 0 && col == 0)
+                                {
+                                    <div class="cell cell-label"></div>
+                                }
+                                else if (row == 0)
+                                {
+                                    <div class="cell cell-label">@GetColumnLabel(col - 1)</div>
+                                }
+                                else if (col == 0)
+                                {
+                                    <div class="cell cell-label">@(row)</div>
+                                }
+                                else
+                                {
+                                    var cellClass = GetCellClass(currentPlayer.OwnBoard.Grid[r - 1, c - 1]);
+                                    <div class="cell @cellClass" 
+                                         data-row="@(r - 1)" 
+                                         data-col="@(c - 1)"
+                                         @ondragover="@(e => HandleDragOver(e, r - 1, c - 1))"
+                                         @ondragleave="HandleDragLeave">
+                                        @if (currentPlayer.OwnBoard.Grid[r - 1, c - 1] == CellState.Ship)
+                                        {
+                                            <span>🚢</span>
+                                        }
+                                    </div>
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <h6>Placed Ships:</h6>
+                    @foreach (var ship in currentPlayer.OwnBoard.Ships.Where(s => s.IsPlaced))
+                    {
+                        <Badge Color="BadgeColor.Primary" Class="me-2">
+                            @ship.Icon @ship.Name (Row: @(ship.Row + 1), Col: @GetColumnLabel(ship.Column))
+                            <Button Color="ButtonColor.Danger" Size="ButtonSize.Small" 
+                                    @onclick="@(() => RemoveShip(ship, currentPlayer))">×</Button>
+                        </Badge>
+                    }
+                </div>
+            </BodyTemplate>
+            <FooterTemplate>
+                <Button Color="ButtonColor.Success" 
+                        Disabled="@(!currentPlayer.OwnBoard.AllShipsPlaced())"
+                        @onclick="ConfirmPlacement">
+                    Confirm Placement
+                </Button>
+            </FooterTemplate>
+        </Modal>
+    }
+    else if (GameState == Models.GameState.Playing)
+    {
+        var currentPlayer = GameService.CurrentSession.CurrentPlayer;
+        var opponentPlayer = GameService.CurrentSession.OpponentPlayer;
+
+        <div class="turn-indicator @(currentPlayer == GameService.CurrentSession.Player1 ? "player1-turn" : "player2-turn")">
+            Current Turn: @currentPlayer.Name
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <Card>
+                    <CardHeader>
+                        <h5>Your Board (@currentPlayer.Name)</h5>
+                    </CardHeader>
+                    <CardBody>
+                        <div class="game-board">
+                            @RenderBoard(currentPlayer.OwnBoard, false)
+                        </div>
+                        <div class="game-stats mt-3">
+                            <h6>Your Ships:</h6>
+                            @foreach (var ship in currentPlayer.OwnBoard.Ships)
+                            {
+                                <Badge Color="@(ship.IsSunk ? BadgeColor.Danger : BadgeColor.Success)" Class="me-2">
+                                    @ship.Icon @ship.Name - Hits: @ship.Hits/@ship.Size
+                                </Badge>
+                            }
+                        </div>
+                    </CardBody>
+                </Card>
+            </div>
+
+            <div class="col-md-6">
+                <Card>
+                    <CardHeader>
+                        <h5>Opponent's Board (Click to Fire!)</h5>
+                    </CardHeader>
+                    <CardBody>
+                        <div class="game-board">
+                            @RenderBoard(currentPlayer.OpponentBoard, true)
+                        </div>
+                        <div class="game-stats mt-3">
+                            <h6>Statistics:</h6>
+                            <p>Shots Fired: @currentPlayer.OpponentBoard.TotalShots</p>
+                            <p>Hits: @currentPlayer.OpponentBoard.Hits | Misses: @currentPlayer.OpponentBoard.Misses</p>
+                            <p>Hit Rate: @(currentPlayer.OpponentBoard.TotalShots > 0 ? 
+                                $"{(currentPlayer.OpponentBoard.Hits * 100.0 / currentPlayer.OpponentBoard.TotalShots):F1}%" : "N/A")</p>
+                        </div>
+                    </CardBody>
+                </Card>
+            </div>
+        </div>
+
+        @if (!string.IsNullOrEmpty(LastShotMessage))
+        {
+            <Alert Color="@(LastShotHit ? AlertColor.Success : AlertColor.Info)" Class="mt-3">
+                @LastShotMessage
+            </Alert>
+        }
+    }
+    else if (GameState == Models.GameState.GameOver)
+    {
+        <div class="text-center">
+            <h2 class="mb-4">🎉 Game Over! 🎉</h2>
+            <Alert Color="AlertColor.Success">
+                <h3>@GameService.CurrentSession.Winner Wins!</h3>
+            </Alert>
+            <div class="game-stats">
+                <p>Game Duration: @((GameService.CurrentSession.EndTime - GameService.CurrentSession.StartTime)?.ToString(@"mm\:ss") ?? "N/A")</p>
+                <p>@GameService.CurrentSession.Player1.Name - Shots: @GameService.CurrentSession.Player1.OpponentBoard.TotalShots | 
+                   Hit Rate: @(GameService.CurrentSession.Player1.OpponentBoard.TotalShots > 0 ? 
+                    $"{(GameService.CurrentSession.Player1.OpponentBoard.Hits * 100.0 / GameService.CurrentSession.Player1.OpponentBoard.TotalShots):F1}%" : "N/A")</p>
+                <p>@GameService.CurrentSession.Player2.Name - Shots: @GameService.CurrentSession.Player2.OpponentBoard.TotalShots | 
+                   Hit Rate: @(GameService.CurrentSession.Player2.OpponentBoard.TotalShots > 0 ? 
+                    $"{(GameService.CurrentSession.Player2.OpponentBoard.Hits * 100.0 / GameService.CurrentSession.Player2.OpponentBoard.TotalShots):F1}%" : "N/A")</p>
+            </div>
+            <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="RestartGame">
+                Play Again
+            </Button>
+        </div>
+    }
+</div>
+
+<Toasts class="p-3" Messages="toastMessages" AutoHide="true" Delay="3000" Placement="ToastsPlacement.TopRight" />
+
+@code {
+    private string Player1Name = "";
+    private string Player2Name = "";
+    private Models.GameState GameState = Models.GameState.Setup;
+    private Modal placementModal = default!;
+    private Ship? draggedShip;
+    private string LastShotMessage = "";
+    private bool LastShotHit = false;
+    private List<ToastMessage> toastMessages = new List<ToastMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        GameService.GameStateChanged += OnGameStateChanged;
+        GameService.ShotFired += OnShotFired;
+        
+        // Load saved player names if they exist
+        var (p1, p2) = await GameService.GetStoredPlayers();
+        if (!string.IsNullOrEmpty(p1)) Player1Name = p1;
+        if (!string.IsNullOrEmpty(p2)) Player2Name = p2;
+    }
+
+    private async Task StartGame()
+    {
+        await GameService.StartNewGame(Player1Name, Player2Name);
+    }
+
+    private void OnGameStateChanged(object? sender, GameStateChangedEventArgs e)
+    {
+        GameState = e.NewState;
+        InvokeAsync(async () =>
+        {
+            if (e.NewState == Models.GameState.Player1Placing || e.NewState == Models.GameState.Player2Placing)
+            {
+                await placementModal.ShowAsync();
+            }
+            else if (placementModal != null)
+            {
+                await placementModal.HideAsync();
+            }
+            StateHasChanged();
+        });
+    }
+
+    private void OnShotFired(object? sender, ShotFiredEventArgs e)
+    {
+        var result = e.Result;
+        LastShotHit = result.IsHit;
+        
+        if (result.IsHit)
+        {
+            LastShotMessage = $"{result.Attacker} hit {result.Defender}'s {result.ShipHit}!";
+            if (result.ShipSunk)
+            {
+                LastShotMessage += $" {result.Message}";
+                ShowToast("Ship Sunk!", result.Message, ToastType.Success);
+            }
+            if (result.GameOver)
+            {
+                ShowToast("Victory!", $"{result.Winner} wins the game!", ToastType.Success);
+            }
+        }
+        else
+        {
+            LastShotMessage = $"{result.Attacker} missed!";
+        }
+        
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void StartDrag(Ship ship)
+    {
+        draggedShip = ship;
+    }
+
+    private void EndDrag()
+    {
+        draggedShip = null;
+    }
+
+    private void AllowDrop(DragEventArgs e)
+    {
+        e.DataTransfer.DropEffect = "move";
+    }
+
+    private async Task HandleDrop(DragEventArgs e)
+    {
+        if (draggedShip == null) return;
+        
+        // This would need JS interop to get exact coordinates
+        // For simplicity, we'll handle drops on individual cells
+    }
+
+    private void HandleDragOver(DragEventArgs e, int row, int col)
+    {
+        if (draggedShip == null) return;
+        
+        e.DataTransfer.DropEffect = "move";
+        
+        var currentPlayer = GameState == Models.GameState.Player1Placing ? 
+            GameService.CurrentSession.Player1 : GameService.CurrentSession.Player2;
+        
+        if (GameService.PlaceShip(draggedShip, row, col, currentPlayer))
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void HandleDragLeave(DragEventArgs e)
+    {
+        // Clear preview
+    }
+
+    private void RotateShip(Ship ship, Player player)
+    {
+        GameService.RotateShip(ship, player);
+        StateHasChanged();
+    }
+
+    private void RemoveShip(Ship ship, Player player)
+    {
+        player.OwnBoard.RemoveShip(ship);
+        StateHasChanged();
+    }
+
+    private async Task ConfirmPlacement()
+    {
+        GameService.ConfirmShipPlacement();
+        await placementModal.HideAsync();
+    }
+
+    private void FireAt(int row, int col)
+    {
+        if (GameState != Models.GameState.Playing) return;
+        
+        var result = GameService.FireShot(row, col);
+        if (!result.Success && !string.IsNullOrEmpty(result.Message))
+        {
+            ShowToast("Invalid Shot", result.Message, ToastType.Warning);
+        }
+    }
+
+    private RenderFragment RenderBoard(GameBoard board, bool isTargeting)
+    {
+        return builder =>
+        {
+            for (int row = 0; row < 11; row++)
+            {
+                for (int col = 0; col < 11; col++)
+                {
+                    int r = row;
+                    int c = col;
+                    
+                    if (row == 0 && col == 0)
+                    {
+                        builder.OpenElement(0, "div");
+                        builder.AddAttribute(1, "class", "cell cell-label");
+                        builder.CloseElement();
+                    }
+                    else if (row == 0)
+                    {
+                        builder.OpenElement(0, "div");
+                        builder.AddAttribute(1, "class", "cell cell-label");
+                        builder.AddContent(2, GetColumnLabel(col - 1));
+                        builder.CloseElement();
+                    }
+                    else if (col == 0)
+                    {
+                        builder.OpenElement(0, "div");
+                        builder.AddAttribute(1, "class", "cell cell-label");
+                        builder.AddContent(2, row.ToString());
+                        builder.CloseElement();
+                    }
+                    else
+                    {
+                        var cellClass = GetCellClass(board.Grid[r - 1, c - 1]);
+                        builder.OpenElement(0, "div");
+                        builder.AddAttribute(1, "class", $"cell {cellClass}");
+                        
+                        if (isTargeting && board.Grid[r - 1, c - 1] == CellState.Empty)
+                        {
+                            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => FireAt(r - 1, c - 1)));
+                        }
+                        
+                        var cellContent = GetCellContent(board.Grid[r - 1, c - 1], !isTargeting);
+                        if (!string.IsNullOrEmpty(cellContent))
+                        {
+                            builder.OpenElement(3, "span");
+                            builder.AddContent(4, cellContent);
+                            builder.CloseElement();
+                        }
+                        
+                        builder.CloseElement();
+                    }
+                }
+            }
+        };
+    }
+
+    private string GetCellClass(CellState state)
+    {
+        return state switch
+        {
+            CellState.Empty => "cell-empty",
+            CellState.Ship => "cell-ship",
+            CellState.Hit => "cell-hit",
+            CellState.Miss => "cell-miss",
+            _ => "cell-empty"
+        };
+    }
+
+    private string GetCellContent(CellState state, bool showShips)
+    {
+        return state switch
+        {
+            CellState.Ship when showShips => "🚢",
+            CellState.Hit => "💥",
+            CellState.Miss => "💦",
+            _ => ""
+        };
+    }
+
+    private string GetColumnLabel(int col)
+    {
+        return ((char)('A' + col)).ToString();
+    }
+
+    private void ShowToast(string title, string message, ToastType type)
+    {
+        toastMessages.Add(new ToastMessage
+        {
+            Type = type,
+            Title = title,
+            Message = message,
+        });
+    }
+
+    private async Task RestartGame()
+    {
+        GameState = Models.GameState.Setup;
+        LastShotMessage = "";
+        await StartGame();
+    }
+
+    public void Dispose()
+    {
+        GameService.GameStateChanged -= OnGameStateChanged;
+        GameService.ShotFired -= OnShotFired;
+    }
 }

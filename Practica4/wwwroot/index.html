@@ -34,7 +34,22 @@
     <!-- Add sortable.js reference if SortableList component is used in your application. -->
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
     <script src="_content/Blazor.Bootstrap/blazor.bootstrap.js"></script>
-
+    <script>
+        window.dragDropSupport = {
+            enableDragDrop: function() {
+                // Add touch support for drag and drop on mobile
+                document.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                }, { passive: false });
+            },
+            
+            getCellPosition: function(element) {
+                const row = parseInt(element.dataset.row);
+                const col = parseInt(element.dataset.col);
+                return { row: row, col: col };
+            }
+        };
+    </script>
 </body>
 
 </html>
