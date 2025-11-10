@@ -13,7 +13,7 @@ namespace Practica4.Models
         Carrier = 5,      // 5 cells
         Battleship = 4,   // 4 cells
         Submarine = 3,    // 3 cells
-        Cruiser = 31,      // 3 cells (another 3-cell ship)
+        Cruiser = 1,      // 3 cells (another 3-cell ship)
         Destroyer = 2     // 2 cells
     }
 

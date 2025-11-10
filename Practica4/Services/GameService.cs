@@ -1,5 +1,7 @@
 using Practica4.Models;
 using Microsoft.Maui.Storage;
+using System.Text.Json;
+using System.IO;
 
 namespace Practica4.Services
 {
@@ -7,6 +9,7 @@ namespace Practica4.Services
     {
         private GameSession _currentSession;
         private readonly ISecureStorage _secureStorage;
+        private readonly string _saveFilePath = Path.Combine(FileSystem.AppDataDirectory, "battleship_save.json");
 
         public GameSession CurrentSession => _currentSession;
 
@@ -36,6 +39,7 @@ namespace Practica4.Services
             InitializePlayerShips(_currentSession.Player2);
 
             OnGameStateChanged(GameState.Player1Placing);
+            await SaveGameAsync();
         }
 
         private void InitializePlayerShips(Player player)
@@ -60,7 +64,7 @@ namespace Practica4.Services
             return (player1, player2);
         }
 
-        public bool PlaceShip(Ship ship, int row, int col, Player player)
+        public async Task<bool> PlaceShip(Ship ship, int row, int col, Player player)
         {
             var board = player.OwnBoard;
             
@@ -74,13 +78,14 @@ namespace Practica4.Services
             if (board.CanPlaceShip(ship, row, col))
             {
                 board.PlaceShip(ship, row, col);
+                await SaveGameAsync();
                 return true;
             }
 
             return false;
         }
 
-        public void RotateShip(Ship ship, Player player)
+        public async Task RotateShip(Ship ship, Player player)
         {
             if (ship.IsPlaced)
             {
@@ -116,15 +121,17 @@ namespace Practica4.Services
                     ? ShipOrientation.Vertical 
                     : ShipOrientation.Horizontal;
             }
+            await SaveGameAsync();
         }
 
-        public void ConfirmShipPlacement()
+        public async Task ConfirmShipPlacement()
         {
             if (_currentSession.State == GameState.Player1Placing)
             {
                 if (_currentSession.Player1.OwnBoard.AllShipsPlaced())
                 {
                     _currentSession.State = GameState.Player2Placing;
+                    await SaveGameAsync();
                     OnGameStateChanged(GameState.Player2Placing);
                 }
             }
@@ -135,6 +142,7 @@ namespace Practica4.Services
                     _currentSession.State = GameState.Playing;
                     _currentSession.Player1.IsCurrentTurn = true;
                     _currentSession.Player2.IsCurrentTurn = false;
+                    await SaveGameAsync();
                     OnGameStateChanged(GameState.Playing);
                 }
             }
@@ -213,7 +221,72 @@ namespace Practica4.Services
             }
 
             OnShotFired(result);
+            
+            // Save game state after every shot
+            _ = SaveGameAsync();
+
             return result;
+        }
+
+        public async Task<bool> LoadGameAsync()
+        {
+            if (!File.Exists(_saveFilePath))
+            {
+                return false;
+            }
+
+            try
+            {
+                var json = await File.ReadAllTextAsync(_saveFilePath);
+                _currentSession = JsonSerializer.Deserialize<GameSession>(json);
+
+                if (_currentSession != null)
+                {
+                    OnGameStateChanged(_currentSession.State);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log error or handle it
+                Console.WriteLine($"Error loading game: {ex.Message}");
+            }
+
+            return false;
+        }
+
+        public async Task<bool> LoadGameFromPathAsync(string filePath)
+        {
+            if (string.IsNullOrWhiteSpace(filePath) || !File.Exists(filePath))
+            {
+                return false;
+            }
+
+            try
+            {
+                var json = await File.ReadAllTextAsync(filePath);
+                _currentSession = JsonSerializer.Deserialize<GameSession>(json);
+
+                if (_currentSession != null)
+                {
+                    OnGameStateChanged(_currentSession.State);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading game from path '{filePath}': {ex.Message}");
+            }
+            return false;
+        }
+
+        private async Task SaveGameAsync()
+        {
+            if (_currentSession == null) return;
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+            var json = JsonSerializer.Serialize(_currentSession, options);
+            await File.WriteAllTextAsync(_saveFilePath, json);
         }
 
         private bool IsShipHit(Ship ship, int row, int col)
@@ -226,6 +299,25 @@ namespace Practica4.Services
                 ? ship.Column + ship.Size - 1 : ship.Column;
 
             return row >= ship.Row && row <= endRow && col >= ship.Column && col <= endCol;
+        }
+
+        public bool HasSavedGame()
+        {
+            return File.Exists(_saveFilePath);
+        }
+
+        public Task DeleteSavedGameAsync()
+        {
+            if (File.Exists(_saveFilePath))
+                File.Delete(_saveFilePath);
+            return Task.CompletedTask;
+        }
+
+        public async Task DeleteSavedGameAndPlayersAsync()
+        {
+            await DeleteSavedGameAsync();
+            _secureStorage.Remove("player1");
+            _secureStorage.Remove("player2");
         }
 
         protected virtual void OnGameStateChanged(GameState newState)

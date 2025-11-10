@@ -2,21 +2,25 @@
 @using BlazorBootstrap
 @inject GameService GameService
 @inject IJSRuntime JSRuntime
+@using Microsoft.Maui.Storage
 
 <style>
     .game-board {
-        display: inline-grid;
-        grid-template-columns: repeat(11, 40px);
-        grid-template-rows: repeat(11, 40px);
+        display: grid;
+        /* Use percentages to scale within the container */
+        grid-template-columns: repeat(11, 1fr);
+        grid-template-rows: repeat(11, 1fr);
+        /* Maintain a square aspect ratio for the whole grid */
+        aspect-ratio: 1 / 1;
         gap: 1px;
         background-color: #ddd;
-        padding: 10px;
+        padding: 5px;
         border-radius: 8px;
+        max-width: 100%;
     }
 
     .cell {
-        width: 40px;
-        height: 40px;
+        /* The width and height will be determined by the grid-template-* properties */
         border: 1px solid #999;
         display: flex;
         align-items: center;
@@ -131,6 +135,28 @@
         background-color: #ffcdd2;
         color: #c62828;
     }
+
+    .board-container {
+        display: flex;
+        justify-content: center;
+        width: 100%; /* Ensure it takes up the card width */
+    }
+
+    .scrollable-container {
+        /* Allows vertical scrolling on mobile when content overflows */
+        overflow-y: auto;
+        height: calc(100vh - 80px); /* Adjust 80px based on header/nav height */
+    }
+
+    /* Media query for larger screens to restore larger cell sizes */
+    @@media (min-width: 768px) {
+        .game-board {
+            grid-template-columns: repeat(11, 40px);
+            grid-template-rows: repeat(11, 40px);
+            aspect-ratio: auto; /* Revert aspect ratio on larger screens for fixed size */
+        }
+        .scrollable-container { height: auto; overflow-y: visible; }
+    }
 </style>
 
 <div class="container-fluid">
@@ -156,6 +182,15 @@
                         <Button Color="ButtonColor.Primary" Size="ButtonSize.Large" @onclick="StartGame" 
                                 Disabled="@(string.IsNullOrWhiteSpace(Player1Name) || string.IsNullOrWhiteSpace(Player2Name))">
                             Start Game
+                        </Button>
+                        @if (CanResumeGame)
+                        {
+                            <Button Color="ButtonColor.Success" Size="ButtonSize.Large" @onclick="ResumeGame" Class="ms-2">
+                                Resume Game
+                            </Button>
+                        }
+                        <Button Color="ButtonColor.Danger" Size="ButtonSize.Large" @onclick="HardReset" Class="ms-2">
+                            Reset Game
                         </Button>
                     </CardBody>
                 </Card>
@@ -199,7 +234,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center">
-                    <div class="game-board" @ondrop="@(e => HandleDrop(e))" @ondragover="@(e => AllowDrop(e))">
+                    <div class="game-board" @ondragover="AllowDrop">
                         @for (int row = 0; row < 11; row++)
                         {
                             @for (int col = 0; col < 11; col++)
@@ -225,8 +260,8 @@
                                     <div class="cell @cellClass" 
                                          data-row="@(r - 1)" 
                                          data-col="@(c - 1)"
-                                         @ondragover="@(e => HandleDragOver(e, r - 1, c - 1))"
-                                         @ondragleave="HandleDragLeave">
+                                         @ondrop="@(() => HandleDrop(r - 1, c - 1))"
+                                         @ondragover:preventDefault="true">
                                         @if (currentPlayer.OwnBoard.Grid[r - 1, c - 1] == CellState.Ship)
                                         {
                                             <span>🚢</span>
@@ -268,14 +303,14 @@
             Current Turn: @currentPlayer.Name
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
+        <div class="row scrollable-container px-2">
+            <div class="col-lg-6 mb-3 mb-lg-0">
                 <Card>
                     <CardHeader>
                         <h5>Your Board (@currentPlayer.Name)</h5>
                     </CardHeader>
                     <CardBody>
-                        <div class="game-board">
+                        <div class="board-container">
                             @RenderBoard(currentPlayer.OwnBoard, false)
                         </div>
                         <div class="game-stats mt-3">
@@ -291,13 +326,13 @@
                 </Card>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-lg-6">
                 <Card>
                     <CardHeader>
                         <h5>Opponent's Board (Click to Fire!)</h5>
                     </CardHeader>
                     <CardBody>
-                        <div class="game-board">
+                        <div class="board-container">
                             @RenderBoard(currentPlayer.OpponentBoard, true)
                         </div>
                         <div class="game-stats mt-3">
@@ -352,39 +387,98 @@
     private Ship? draggedShip;
     private string LastShotMessage = "";
     private bool LastShotHit = false;
+    private bool CanResumeGame = false;
     private List<ToastMessage> toastMessages = new List<ToastMessage>();
 
     protected override async Task OnInitializedAsync()
     {
+        // Always subscribe to events first
         GameService.GameStateChanged += OnGameStateChanged;
         GameService.ShotFired += OnShotFired;
-        
-        // Load saved player names if they exist
+
+        // Check if a resumable game exists to show the button
+        CanResumeGame = GameService.HasSavedGame();
+
+        // Load player names for the setup screen
         var (p1, p2) = await GameService.GetStoredPlayers();
         if (!string.IsNullOrEmpty(p1)) Player1Name = p1;
         if (!string.IsNullOrEmpty(p2)) Player2Name = p2;
+
+        // Always start at the setup screen
+        GameState = Models.GameState.Setup;
+        StateHasChanged();
     }
 
     private async Task StartGame()
     {
+        // Starting a new game should clear any old save file
+        await GameService.DeleteSavedGameAsync();
         await GameService.StartNewGame(Player1Name, Player2Name);
     }
 
     private void OnGameStateChanged(object? sender, GameStateChangedEventArgs e)
     {
         GameState = e.NewState;
-        InvokeAsync(async () =>
+        // This needs to be invoked on the UI thread to handle state changes and UI updates.
+        InvokeAsync(HandleModalState);
+    }
+
+    private async Task ResumeGame()
+    {
+        await GameService.LoadGameAsync();
+    }
+
+    private async Task LoadGameFromFile()
+    {
+        try
         {
-            if (e.NewState == Models.GameState.Player1Placing || e.NewState == Models.GameState.Player2Placing)
+            var customFileType = new FilePickerFileType(
+                new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.WinUI, new[] { ".json" } },
+                    { DevicePlatform.Android, new[] { "application/json" } },
+                    { DevicePlatform.iOS, new[] { "public.json" } },
+                    { DevicePlatform.macOS, new[] { "json" } },
+                });
+
+            var pickOptions = new PickOptions
             {
-                await placementModal.ShowAsync();
-            }
-            else if (placementModal != null)
+                PickerTitle = "Select a Battleship save file (.json)",
+                FileTypes = customFileType,
+            };
+
+            var result = await FilePicker.PickAsync(pickOptions);
+
+            if (result != null)
             {
-                await placementModal.HideAsync();
+                bool loaded = await GameService.LoadGameFromPathAsync(result.FullPath);
+                if (!loaded)
+                {
+                    ShowToast("Load Failed", "The selected file could not be loaded as a valid game.", ToastType.Danger);
+                }
             }
-            StateHasChanged();
-        });
+        }
+        catch (Exception ex)
+        {
+            ShowToast("Error", $"An error occurred while picking the file: {ex.Message}", ToastType.Danger);
+        }
+    }
+
+    private async Task HandleModalState()
+    {
+        // This forces a re-render, ensuring the modal is available in the DOM if the state requires it.
+        StateHasChanged(); 
+
+        if (GameState == Models.GameState.Player1Placing || GameState == Models.GameState.Player2Placing)
+        {
+            // A small delay can help ensure the component is fully ready.
+            await Task.Delay(50); 
+            if (placementModal != null) await placementModal.ShowAsync();
+        }
+        else if (placementModal != null)
+        {
+            await placementModal.HideAsync();
+        }
     }
 
     private void OnShotFired(object? sender, ShotFiredEventArgs e)
@@ -428,40 +522,28 @@
         e.DataTransfer.DropEffect = "move";
     }
 
-    private async Task HandleDrop(DragEventArgs e)
+    private async Task HandleDrop(int row, int col)
     {
         if (draggedShip == null) return;
-        
-        // This would need JS interop to get exact coordinates
-        // For simplicity, we'll handle drops on individual cells
-    }
 
-    private void HandleDragOver(DragEventArgs e, int row, int col)
-    {
-        if (draggedShip == null) return;
-        
-        e.DataTransfer.DropEffect = "move";
-        
         var currentPlayer = GameState == Models.GameState.Player1Placing ? 
             GameService.CurrentSession.Player1 : GameService.CurrentSession.Player2;
-        
-        if (GameService.PlaceShip(draggedShip, row, col, currentPlayer))
+
+        if (await GameService.PlaceShip(draggedShip, row, col, currentPlayer))
         {
             StateHasChanged();
         }
+        // If PlaceShip returns false, the ship is not moved from its last valid position (or remains unplaced).
+        // This prevents the state from becoming invalid.
     }
 
-    private void HandleDragLeave(DragEventArgs e)
+    private async Task RotateShip(Ship ship, Player player)
     {
-        // Clear preview
-    }
-
-    private void RotateShip(Ship ship, Player player)
-    {
-        GameService.RotateShip(ship, player);
+        await GameService.RotateShip(ship, player);
         StateHasChanged();
     }
 
+    // This action is purely client-side before confirmation, so no save needed here.
     private void RemoveShip(Ship ship, Player player)
     {
         player.OwnBoard.RemoveShip(ship);
@@ -470,8 +552,7 @@
 
     private async Task ConfirmPlacement()
     {
-        GameService.ConfirmShipPlacement();
-        await placementModal.HideAsync();
+        await GameService.ConfirmShipPlacement();
     }
 
     private void FireAt(int row, int col)
@@ -489,6 +570,9 @@
     {
         return builder =>
         {
+            builder.OpenElement(0, "div");
+            builder.AddAttribute(1, "class", "game-board");
+
             for (int row = 0; row < 11; row++)
             {
                 for (int col = 0; col < 11; col++)
@@ -498,40 +582,40 @@
                     
                     if (row == 0 && col == 0)
                     {
-                        builder.OpenElement(0, "div");
-                        builder.AddAttribute(1, "class", "cell cell-label");
+                        builder.OpenElement(2, "div");
+                        builder.AddAttribute(3, "class", "cell cell-label");
                         builder.CloseElement();
                     }
                     else if (row == 0)
                     {
-                        builder.OpenElement(0, "div");
-                        builder.AddAttribute(1, "class", "cell cell-label");
-                        builder.AddContent(2, GetColumnLabel(col - 1));
+                        builder.OpenElement(4, "div");
+                        builder.AddAttribute(5, "class", "cell cell-label");
+                        builder.AddContent(6, GetColumnLabel(col - 1));
                         builder.CloseElement();
                     }
                     else if (col == 0)
                     {
-                        builder.OpenElement(0, "div");
-                        builder.AddAttribute(1, "class", "cell cell-label");
-                        builder.AddContent(2, row.ToString());
+                        builder.OpenElement(7, "div");
+                        builder.AddAttribute(8, "class", "cell cell-label");
+                        builder.AddContent(9, row.ToString());
                         builder.CloseElement();
                     }
                     else
                     {
                         var cellClass = GetCellClass(board.Grid[r - 1, c - 1]);
-                        builder.OpenElement(0, "div");
-                        builder.AddAttribute(1, "class", $"cell {cellClass}");
+                        builder.OpenElement(10, "div");
+                        builder.AddAttribute(11, "class", $"cell {cellClass}");
                         
                         if (isTargeting && board.Grid[r - 1, c - 1] == CellState.Empty)
                         {
-                            builder.AddAttribute(2, "onclick", EventCallback.Factory.Create(this, () => FireAt(r - 1, c - 1)));
+                            builder.AddAttribute(12, "onclick", EventCallback.Factory.Create(this, () => FireAt(r - 1, c - 1)));
                         }
                         
                         var cellContent = GetCellContent(board.Grid[r - 1, c - 1], !isTargeting);
                         if (!string.IsNullOrEmpty(cellContent))
                         {
-                            builder.OpenElement(3, "span");
-                            builder.AddContent(4, cellContent);
+                            builder.OpenElement(13, "span");
+                            builder.AddContent(14, cellContent);
                             builder.CloseElement();
                         }
                         
@@ -539,6 +623,8 @@
                     }
                 }
             }
+
+            builder.CloseElement(); // close game-board div
         };
     }
 
@@ -582,9 +668,23 @@
 
     private async Task RestartGame()
     {
+        await GameService.DeleteSavedGameAsync();
         GameState = Models.GameState.Setup;
         LastShotMessage = "";
-        await StartGame();
+        // Reload player names for the setup screen
+        var (p1, p2) = await GameService.GetStoredPlayers();
+        if (!string.IsNullOrEmpty(p1)) Player1Name = p1;
+        if (!string.IsNullOrEmpty(p2)) Player2Name = p2;
+        StateHasChanged();
+    }
+
+    private async Task HardReset()
+    {
+        await GameService.DeleteSavedGameAndPlayersAsync();
+        Player1Name = "";
+        Player2Name = "";
+        GameState = Models.GameState.Setup;
+        StateHasChanged();
     }
 
     public void Dispose()

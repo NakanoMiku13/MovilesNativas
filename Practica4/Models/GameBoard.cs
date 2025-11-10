@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
+
 namespace Practica4.Models
 {
     public class GameBoard
     {
         public const int BoardSize = 10;
+        [JsonIgnore] // The serializer doesn't support 2D arrays, so we ignore this.
         public CellState[,] Grid { get; set; }
         public List<Ship> Ships { get; set; }
         public int TotalShots { get; set; }
@@ -14,6 +17,29 @@ namespace Practica4.Models
             Grid = new CellState[BoardSize, BoardSize];
             Ships = new List<Ship>();
             InitializeBoard();
+        }
+
+        // Surrogate property for JSON serialization
+        public List<CellState> GridList
+        {
+            get
+            {
+                var list = new List<CellState>(BoardSize * BoardSize);
+                for (int i = 0; i < BoardSize; i++)
+                {
+                    for (int j = 0; j < BoardSize; j++)
+                    {
+                        list.Add(Grid[i, j]);
+                    }
+                }
+                return list;
+            }
+            set
+            {
+                for (int i = 0; i < BoardSize; i++)
+                for (int j = 0; j < BoardSize; j++)
+                    Grid[i, j] = value[i * BoardSize + j];
+            }
         }
 
         private void InitializeBoard()
