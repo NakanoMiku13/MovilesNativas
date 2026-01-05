@@ -1,0 +1,358 @@
+@page "/"
+@using Examen.Services
+@using Examen.Models
+@using System.Globalization
+@inject LocationTrackingService TrackingService
+@inject LocationStorageService StorageService
+@implements IDisposable
+
+<div class="main-container @themeClass">
+    <div class="header">
+        <h3>GPS Tracker - @(settings.Theme == "Guinda" ? "IPN" : "ESCOM")</h3>
+        <div class="status-indicator @(isTracking ? "active" : "inactive")">
+            @(isTracking ? "RASTREANDO" : "DETENIDO")
+        </div>
+    </div>
+
+    <div class="map-container">
+        <iframe id="map"
+            src="@GetMapUrl()"
+            style="width:100%;height:100%;border:none;">
+        </iframe>
+    </div>
+
+    <div class="info-panel">
+        <div class="coords">
+            <strong>Latitud:</strong> @(currentLocation?.Latitude.ToString("F6", CultureInfo.InvariantCulture) ?? "---")<br/>
+            <strong>Longitud:</strong> @(currentLocation?.Longitude.ToString("F6", CultureInfo.InvariantCulture) ?? "---")<br/>
+            <strong>Precision:</strong> @(currentLocation?.Accuracy.ToString("F2", CultureInfo.InvariantCulture) ?? "0") m<br/>
+            <strong>Ultima actualizacion:</strong> @(currentLocation?.Timestamp.ToString("HH:mm:ss") ?? "--:--:--")
+        </div>
+        @if (isTracking)
+        {
+            <div class="backend-status @(string.IsNullOrEmpty(TrackingService.LastBackendError) ? "ok" : "error")">
+                <strong>Backend:</strong>
+                @if (string.IsNullOrEmpty(TrackingService.LastBackendError))
+                {
+                    <span>Conectado</span>
+                }
+                else
+                {
+                    <span>@TrackingService.LastBackendError</span>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="controls">
+        <div class="interval-selector">
+            <label>Intervalo:</label>
+            <select @bind="selectedInterval" @bind:after="OnIntervalChanged">
+                <option value="10">10 segundos</option>
+                <option value="60">60 segundos</option>
+                <option value="300">5 minutos</option>
+            </select>
+        </div>
+
+        <div class="theme-selector">
+            <label>Tema:</label>
+            <select @bind="selectedTheme" @bind:after="OnThemeChanged">
+                <option value="Guinda">Guinda (IPN)</option>
+                <option value="Azul">Azul (ESCOM)</option>
+            </select>
+        </div>
+
+        <div class="notification-toggle">
+            <label>
+                <input type="checkbox" @bind="showNotification" @bind:after="OnNotificationChanged" />
+                Mostrar notificacion
+            </label>
+        </div>
+    </div>
+
+    <div class="buttons">
+        @if (!isTracking)
+        {
+            <button class="btn-start" @onclick="StartTracking">Iniciar Rastreo</button>
+        }
+        else
+        {
+            <button class="btn-stop" @onclick="StopTracking">Detener Rastreo</button>
+        }
+        <a href="/history" class="btn-history">Historial</a>
+        <a href="/settings" class="btn-settings">Config</a>
+    </div>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="error-message">@errorMessage</div>
+    }
+</div>
+
+<style>
+    .main-container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .main-container.theme-guinda {
+        --primary-color: #6D1024;
+        --secondary-color: #8B1538;
+        --accent-color: #A52A2A;
+    }
+
+    .main-container.theme-azul {
+        --primary-color: #003366;
+        --secondary-color: #004080;
+        --accent-color: #0066CC;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+    }
+
+    .header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .status-indicator {
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+
+    .status-indicator.active {
+        background: #28a745;
+        animation: pulse 1.5s infinite;
+    }
+
+    .status-indicator.inactive {
+        background: #dc3545;
+    }
+
+    @@keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+
+    .map-container {
+        flex: 1;
+        min-height: 250px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid var(--primary-color);
+    }
+
+    .info-panel {
+        background: #f8f9fa;
+        padding: 12px;
+        border-radius: 8px;
+        border-left: 4px solid var(--primary-color);
+    }
+
+    .coords {
+        font-family: monospace;
+        font-size: 0.9rem;
+        line-height: 1.6;
+    }
+
+    .backend-status {
+        margin-top: 8px;
+        padding: 6px 10px;
+        border-radius: 4px;
+        font-size: 0.85rem;
+    }
+
+    .backend-status.ok {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .backend-status.error {
+        background: #f8d7da;
+        color: #721c24;
+    }
+
+    .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        padding: 10px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .interval-selector, .theme-selector, .notification-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .controls select {
+        padding: 6px 10px;
+        border: 1px solid var(--primary-color);
+        border-radius: 4px;
+        background: white;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-start, .btn-stop, .btn-history, .btn-settings {
+        flex: 1;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-start {
+        background: #28a745;
+        color: white;
+    }
+
+    .btn-stop {
+        background: #dc3545;
+        color: white;
+    }
+
+    .btn-history {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-settings {
+        background: #6c757d;
+        color: white;
+    }
+
+    .error-message {
+        background: #f8d7da;
+        color: #721c24;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    @@media (prefers-color-scheme: dark) {
+        .info-panel, .controls {
+            background: #2d2d2d;
+            color: #fff;
+        }
+        .coords {
+            color: #e0e0e0;
+        }
+    }
+</style>
+
+@code {
+    private bool isTracking = false;
+    private LocationRecord? currentLocation;
+    private string errorMessage = "";
+    private AppSettings settings = new();
+    private int selectedInterval = 10;
+    private string selectedTheme = "Guinda";
+    private bool showNotification = true;
+    private string themeClass => settings.Theme == "Guinda" ? "theme-guinda" : "theme-azul";
+
+    protected override void OnInitialized()
+    {
+        settings = StorageService.GetSettings();
+        selectedInterval = settings.UpdateIntervalSeconds;
+        selectedTheme = settings.Theme;
+        showNotification = settings.ShowNotification;
+        currentLocation = StorageService.GetLastLocation();
+        isTracking = TrackingService.IsTracking;
+
+        TrackingService.OnLocationUpdated += HandleLocationUpdated;
+        TrackingService.OnTrackingStateChanged += HandleTrackingStateChanged;
+        TrackingService.OnError += HandleError;
+    }
+
+    private void HandleLocationUpdated(LocationRecord location)
+    {
+        currentLocation = location;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleTrackingStateChanged(bool tracking)
+    {
+        isTracking = tracking;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleError(string error)
+    {
+        errorMessage = error;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async Task StartTracking()
+    {
+        errorMessage = "";
+        await TrackingService.StartTrackingAsync();
+    }
+
+    private void StopTracking()
+    {
+        TrackingService.StopTracking();
+    }
+
+    private void OnIntervalChanged()
+    {
+        settings.UpdateIntervalSeconds = selectedInterval;
+        StorageService.UpdateSettings(settings);
+    }
+
+    private void OnThemeChanged()
+    {
+        settings.Theme = selectedTheme;
+        StorageService.UpdateSettings(settings);
+    }
+
+    private void OnNotificationChanged()
+    {
+        settings.ShowNotification = showNotification;
+        StorageService.UpdateSettings(settings);
+    }
+
+    private string GetMapUrl()
+    {
+        double lat = currentLocation?.Latitude ?? 19.4326;
+        double lon = currentLocation?.Longitude ?? -99.1332;
+        // Usar InvariantCulture para URLs
+        var latStr = lat.ToString(CultureInfo.InvariantCulture);
+        var lonStr = lon.ToString(CultureInfo.InvariantCulture);
+        var bbox1 = (lon - 0.01).ToString(CultureInfo.InvariantCulture);
+        var bbox2 = (lat - 0.01).ToString(CultureInfo.InvariantCulture);
+        var bbox3 = (lon + 0.01).ToString(CultureInfo.InvariantCulture);
+        var bbox4 = (lat + 0.01).ToString(CultureInfo.InvariantCulture);
+        return $"https://www.openstreetmap.org/export/embed.html?bbox={bbox1},{bbox2},{bbox3},{bbox4}&layer=mapnik&marker={latStr},{lonStr}";
+    }
+
+    public void Dispose()
+    {
+        TrackingService.OnLocationUpdated -= HandleLocationUpdated;
+        TrackingService.OnTrackingStateChanged -= HandleTrackingStateChanged;
+        TrackingService.OnError -= HandleError;
+    }
+}

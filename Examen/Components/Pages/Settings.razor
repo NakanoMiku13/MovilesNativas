@@ -1,0 +1,224 @@
+@page "/settings"
+@using Examen.Services
+@using Examen.Models
+@inject LocationStorageService StorageService
+@inject NavigationManager Navigation
+
+<div class="settings-container @themeClass">
+    <div class="header">
+        <button class="btn-back" @onclick="GoBack">← Volver</button>
+        <h3>Configuracion</h3>
+        <span></span>
+    </div>
+
+    <div class="settings-form">
+        <div class="setting-group">
+            <label>URL del Backend:</label>
+            <input type="text" @bind="backendUrl" placeholder="http://IP:Puerto" />
+            <small>Ej: http://192.168.1.100:5000</small>
+        </div>
+
+        <div class="setting-group">
+            <label>Intervalo de actualizacion:</label>
+            <select @bind="selectedInterval">
+                <option value="10">10 segundos</option>
+                <option value="60">60 segundos</option>
+                <option value="300">5 minutos</option>
+            </select>
+        </div>
+
+        <div class="setting-group">
+            <label>Tema:</label>
+            <select @bind="selectedTheme">
+                <option value="Guinda">Guinda (IPN)</option>
+                <option value="Azul">Azul (ESCOM)</option>
+            </select>
+        </div>
+
+        <div class="setting-group checkbox-group">
+            <label>
+                <input type="checkbox" @bind="showNotification" />
+                Mostrar notificacion de rastreo
+            </label>
+        </div>
+
+        <button class="btn-save" @onclick="SaveSettings">Guardar Configuracion</button>
+
+        @if (showSaved)
+        {
+            <div class="saved-message">Configuracion guardada</div>
+        }
+    </div>
+</div>
+
+<style>
+    .settings-container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .settings-container.theme-guinda {
+        --primary-color: #6D1024;
+    }
+
+    .settings-container.theme-azul {
+        --primary-color: #003366;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .header h3 {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .btn-back {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .settings-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 15px;
+        background: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .setting-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .setting-group label {
+        font-weight: bold;
+        font-size: 0.9rem;
+    }
+
+    .setting-group input[type="text"],
+    .setting-group select {
+        padding: 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+    }
+
+    .setting-group input[type="text"]:focus,
+    .setting-group select:focus {
+        border-color: var(--primary-color);
+        outline: none;
+    }
+
+    .setting-group small {
+        color: #666;
+        font-size: 0.8rem;
+    }
+
+    .checkbox-group label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: normal;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+    }
+
+    .btn-save {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    .saved-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 10px;
+        border-radius: 6px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    @@media (prefers-color-scheme: dark) {
+        .settings-form {
+            background: #2d2d2d;
+            color: #fff;
+        }
+        .setting-group input[type="text"],
+        .setting-group select {
+            background: #1e1e1e;
+            color: #fff;
+            border-color: #444;
+        }
+        .setting-group small {
+            color: #aaa;
+        }
+    }
+</style>
+
+@code {
+    private string backendUrl = "";
+    private int selectedInterval = 10;
+    private string selectedTheme = "Guinda";
+    private bool showNotification = true;
+    private bool showSaved = false;
+    private string themeClass = "theme-guinda";
+
+    protected override void OnInitialized()
+    {
+        var settings = StorageService.GetSettings();
+        backendUrl = settings.BackendUrl;
+        selectedInterval = settings.UpdateIntervalSeconds;
+        selectedTheme = settings.Theme;
+        showNotification = settings.ShowNotification;
+        themeClass = settings.Theme == "Guinda" ? "theme-guinda" : "theme-azul";
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private async Task SaveSettings()
+    {
+        var settings = new AppSettings
+        {
+            BackendUrl = backendUrl,
+            UpdateIntervalSeconds = selectedInterval,
+            Theme = selectedTheme,
+            ShowNotification = showNotification
+        };
+        StorageService.UpdateSettings(settings);
+        themeClass = settings.Theme == "Guinda" ? "theme-guinda" : "theme-azul";
+        showSaved = true;
+        StateHasChanged();
+        await Task.Delay(2000);
+        showSaved = false;
+        StateHasChanged();
+    }
+}

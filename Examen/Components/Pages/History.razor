@@ -1,0 +1,190 @@
+@page "/history"
+@using Examen.Services
+@using Examen.Models
+@inject LocationStorageService StorageService
+@inject NavigationManager Navigation
+
+<div class="history-container @themeClass">
+    <div class="header">
+        <button class="btn-back" @onclick="GoBack">← Volver</button>
+        <h3>Historial de Ubicaciones</h3>
+        <button class="btn-clear" @onclick="ClearHistory">Limpiar</button>
+    </div>
+
+    <div class="stats">
+        <span>Total registros: @locations.Count</span>
+    </div>
+
+    <div class="location-list">
+        @if (locations.Count == 0)
+        {
+            <div class="empty-state">
+                <p>No hay ubicaciones registradas</p>
+            </div>
+        }
+        else
+        {
+            @foreach (var location in locations)
+            {
+                <div class="location-item">
+                    <div class="location-time">
+                        <strong>@location.Timestamp.ToString("dd/MM/yyyy")</strong>
+                        <span>@location.Timestamp.ToString("HH:mm:ss")</span>
+                    </div>
+                    <div class="location-coords">
+                        <div>Lat: @location.Latitude.ToString("F6")</div>
+                        <div>Lon: @location.Longitude.ToString("F6")</div>
+                    </div>
+                    <div class="location-accuracy">
+                        Precision: @location.Accuracy.ToString("F2")m
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .history-container {
+        padding: 10px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .history-container.theme-guinda {
+        --primary-color: #6D1024;
+    }
+
+    .history-container.theme-azul {
+        --primary-color: #003366;
+    }
+
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--primary-color);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .header h3 {
+        margin: 0;
+        font-size: 1rem;
+    }
+
+    .btn-back, .btn-clear {
+        background: rgba(255,255,255,0.2);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+    }
+
+    .btn-clear {
+        background: #dc3545;
+    }
+
+    .stats {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .location-list {
+        flex: 1;
+        overflow-y: auto;
+    }
+
+    .location-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid #ddd;
+        border-left: 4px solid var(--primary-color);
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .location-time {
+        display: flex;
+        flex-direction: column;
+        min-width: 90px;
+    }
+
+    .location-time strong {
+        font-size: 0.85rem;
+    }
+
+    .location-time span {
+        font-size: 0.75rem;
+        color: #666;
+    }
+
+    .location-coords {
+        font-family: monospace;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .location-accuracy {
+        font-size: 0.75rem;
+        color: #666;
+        min-width: 80px;
+        text-align: right;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+    }
+
+    @@media (prefers-color-scheme: dark) {
+        .stats {
+            background: #2d2d2d;
+            color: #fff;
+        }
+        .location-item {
+            background: #1e1e1e;
+            border-color: #444;
+            color: #fff;
+        }
+        .location-time span, .location-accuracy {
+            color: #aaa;
+        }
+    }
+</style>
+
+@code {
+    private List<LocationRecord> locations = new();
+    private string themeClass = "theme-guinda";
+
+    protected override void OnInitialized()
+    {
+        locations = StorageService.GetAllLocations();
+        var settings = StorageService.GetSettings();
+        themeClass = settings.Theme == "Guinda" ? "theme-guinda" : "theme-azul";
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+
+    private void ClearHistory()
+    {
+        StorageService.ClearHistory();
+        locations = StorageService.GetAllLocations();
+    }
+}

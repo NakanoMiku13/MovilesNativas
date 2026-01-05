@@ -1,0 +1,71 @@
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.valid.modified:not([type=checkbox]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+.blazor-error-boundary {
+    background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iNDkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIG92ZXJmbG93PSJoaWRkZW4iPjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcDAiPjxyZWN0IHg9IjIzNSIgeT0iNTEiIHdpZHRoPSI1NiIgaGVpZ2h0PSI0OSIvPjwvY2xpcFBhdGg+PC9kZWZzPjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwMCkiIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMzUgLTUxKSI+PHBhdGggZD0iTTI2My41MDYgNTFDMjY0LjcxNyA1MSAyNjUuODEzIDUxLjQ4MzcgMjY2LjYwNiA1Mi4yNjU4TDI2Ni42MDYgNTIuMjY1OEwyODkuMzk0IDc0LjQzMzFDMjkwLjI4IDc1LjMwMTQgMjkwLjI4IDc2LjY5ODYgMjg5LjM5NCA3Ny41NjY5TDI4OS4zOTQgNzcuNTY2OUwyNjYuNjA2IDk5LjczNDJDMjY1LjcxOSAxMDAuNjAzIDI2NC4yODEgMTAwLjYwMyAyNjMuMzk0IDk5LjczNDJMMjYzLjM5NCA5OS43MzQyTDI0MC42MDYgNzcuNTY2OUMyMzkuNzE5IDc2LjY5ODYgMjM5LjcxOSA3NS4zMDE0IDI0MC42MDYgNzQuNDMzMUwyNDAuNjA2IDc0LjQzMzFMMjYzLjM5NCA1Mi4yNjU4QzI2NC4xODcgNTEuNDgzNyAyNjUuMjgzIDUxIDI2Ni40OTQgNTFMMjY2LjQ5NCA1MUwyNjMuNTA2IDUxWiIgZmlsbD0iI0ZGNTcyMiIgZmlsbC1ydWxlPSJldmVub2RkIi8+PHBhdGggZD0iTTI2My4yNTYgNTguNjMzNkMyNjQuNjQgNTguMzg4OCAyNjYuMDU5IDU5LjMyOTQgMjY2LjM1MiA2MC43MTQ1TDI2OS4wNTYgNzQuMjE4OUMyNjkuMTI5IDc0LjMxNzYgMjY5LjQwMyA3NC44MTczIDI2OS4xNzYgNzUuNDMyMkMyNjkuMTI4IDc1LjU3ODUgMjY5LjAyNCA3NS43MTM0IDI2OC45NjQgNzUuNzk2NUwyNjguOTY0IDc1Ljc5NjVMMjU2LjQ3MSA4Ny40ODg0QzI1NS4xOTkgODguNzA0NCAyNTMuMTYxIDg4LjYzMTcgMjUxLjk0NSA4Ny4zNTk1TDI1MS45NDUgODcuMzU5NUwyNDEuODU4IDc2Ljk5NjRDMjQxLjI0MSA3Ni4zNTQzIDI0MS4wMzYgNzUuNDU5MSAyNDEuMjU1IDc0LjYzNTVDMjQxLjM2MSA3NC4yNDg5IDI0MS41NjggNzMuODc5NyAyNDEuODk0IDczLjU0MzFMMjQxLjg5NCA3My41NDMxTDI1NC41MzYgNjAuNTU5MkMyNTUuMTM1IDU5LjkxNzUgMjU1Ljk2OCA1OS41NDQ2IDI1Ni44NDEgNTkuNDg5NkwyNTYuODQxIDU5LjQ4OTZMMjYzLjI1NiA1OC42MzM2WiIgZmlsbD0iI0ZGRkZGRiIvPjwvZz48L3N2Zz4=) no-repeat 1rem/1.8rem, #b32121;
+    padding: 1rem 1rem 1rem 3.7rem;
+    color: white;
+}
+
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
+
+.status-bar-safe-area {
+    display: none;
+}
+
+@supports (-webkit-touch-callout: none) {
+    .status-bar-safe-area {
+        display: flex;
+        position: sticky;
+        top: 0;
+        height: env(safe-area-inset-top);
+        background-color: #f7f7f7;
+        width: 100%;
+        z-index: 1;
+    }
+}

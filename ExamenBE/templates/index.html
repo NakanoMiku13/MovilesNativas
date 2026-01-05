@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPS Tracker - Backend</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #6D1024, #003366);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h1 {
+            font-size: 1.5rem;
+        }
+        .status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #28a745;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .container {
+            display: flex;
+            height: calc(100vh - 60px);
+        }
+        .sidebar {
+            width: 380px;
+            background: white;
+            border-right: 1px solid #ddd;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        .sidebar-header {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+        .time-filter {
+            padding: 15px;
+            background: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+        .time-filter h4 {
+            margin-bottom: 10px;
+            color: #6D1024;
+        }
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .filter-row label {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .filter-row input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 4px;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-filter {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .btn-apply {
+            background: #6D1024;
+            color: white;
+        }
+        .btn-clear {
+            background: #6c757d;
+            color: white;
+        }
+        .btn-all {
+            background: #003366;
+            color: white;
+        }
+        .device-list {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+        .device-item {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .device-item:hover {
+            border-color: #6D1024;
+            background: #fff5f5;
+        }
+        .device-item.active {
+            border-color: #6D1024;
+            background: #fff0f0;
+            border-width: 2px;
+        }
+        .device-id {
+            font-weight: bold;
+            font-size: 0.9rem;
+            color: #333;
+            word-break: break-all;
+        }
+        .device-coords {
+            font-family: monospace;
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+        .device-time {
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 3px;
+        }
+        .device-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+            font-size: 0.75rem;
+        }
+        .device-stats span {
+            background: #e9ecef;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .info-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            min-width: 280px;
+        }
+        .info-overlay h3 {
+            margin-bottom: 10px;
+            color: #6D1024;
+        }
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+        .info-value {
+            font-family: monospace;
+        }
+        .btn-refresh {
+            width: 100%;
+            padding: 10px;
+            background: #6D1024;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-refresh:hover {
+            background: #8B1538;
+        }
+        .no-devices {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+        .route-toggle {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .filter-info {
+            background: #fff3cd;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 10px;
+            display: none;
+        }
+        .filter-info.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>GPS Tracker - Monitor</h1>
+        <div class="status">
+            <div class="status-dot"></div>
+            <span id="device-count">0 dispositivos</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                Dispositivos Conectados
+            </div>
+
+            <div class="time-filter">
+                <h4>Filtro por Tiempo</h4>
+                <div class="filter-row">
+                    <label>
+                        Desde:
+                        <input type="datetime-local" id="filter-start">
+                    </label>
+                    <label>
+                        Hasta:
+                        <input type="datetime-local" id="filter-end">
+                    </label>
+                </div>
+                <div class="filter-buttons">
+                    <button class="btn-filter btn-apply" onclick="applyFilter()">Aplicar</button>
+                    <button class="btn-filter btn-all" onclick="showAllHistory()">Todo</button>
+                    <button class="btn-filter btn-clear" onclick="clearFilter()">Limpiar</button>
+                </div>
+                <div class="filter-info" id="filter-info"></div>
+            </div>
+
+            <div class="device-list" id="device-list">
+                <div class="no-devices">Esperando dispositivos...</div>
+            </div>
+
+            <button class="btn-refresh" onclick="loadDevices()">Actualizar Lista</button>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="info-overlay" id="info-panel" style="display: none;">
+                <h3>Ubicacion Actual</h3>
+                <div class="info-row">
+                    <span class="info-label">Latitud:</span>
+                    <span class="info-value" id="info-lat">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Longitud:</span>
+                    <span class="info-value" id="info-lon">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Precision:</span>
+                    <span class="info-value" id="info-accuracy">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ultima act:</span>
+                    <span class="info-value" id="info-time">-</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Registros:</span>
+                    <span class="info-value" id="info-records">-</span>
+                </div>
+                <div class="route-toggle">
+                    <input type="checkbox" id="show-route" checked onchange="toggleRoute()">
+                    <label for="show-route">Mostrar ruta</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Inicializar mapa con OSM
+        const map = L.map('map').setView([19.4326, -99.1332], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let markers = {};
+        let routes = {};
+        let selectedDevice = null;
+        let showRoute = true;
+        let currentFilter = { start: null, end: null };
+
+        // Icono personalizado
+        const deviceIcon = L.divIcon({
+            className: 'device-marker',
+            html: '<div style="background:#6D1024;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
+        });
+
+        const startIcon = L.divIcon({
+            className: 'start-marker',
+            html: '<div style="background:#28a745;width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [16, 16],
+            iconAnchor: [8, 8]
+        });
+
+        async function loadDevices() {
+            try {
+                const response = await fetch('/api/devices');
+                const devices = await response.json();
+
+                document.getElementById('device-count').textContent = `${devices.length} dispositivo(s)`;
+
+                const list = document.getElementById('device-list');
+
+                if (devices.length === 0) {
+                    list.innerHTML = '<div class="no-devices">Esperando dispositivos...</div>';
+                    return;
+                }
+
+                list.innerHTML = devices.map(d => `
+                    <div class="device-item ${selectedDevice === d.device_id ? 'active' : ''}"
+                         onclick="selectDevice('${d.device_id}')">
+                        <div class="device-id">${d.device_id.substring(0, 25)}...</div>
+                        <div class="device-coords">
+                            ${d.current.lat.toFixed(6)}, ${d.current.lon.toFixed(6)}
+                        </div>
+                        <div class="device-time">
+                            ${formatDate(d.current.timestamp)}
+                        </div>
+                        <div class="device-stats">
+                            <span>${d.history_count} registros</span>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Actualizar marcadores
+                devices.forEach(d => {
+                    const pos = [d.current.lat, d.current.lon];
+
+                    if (markers[d.device_id]) {
+                        markers[d.device_id].setLatLng(pos);
+                    } else {
+                        markers[d.device_id] = L.marker(pos, {icon: deviceIcon})
+                            .addTo(map)
+                            .bindPopup(`<b>Device:</b> ${d.device_id.substring(0, 15)}...`);
+                    }
+                });
+
+                // Si hay dispositivo seleccionado, actualizar info
+                if (selectedDevice) {
+                    const device = devices.find(d => d.device_id === selectedDevice);
+                    if (device) {
+                        updateInfoPanel(device.current, device.history_count);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error loading devices:', error);
+            }
+        }
+
+        async function selectDevice(deviceId) {
+            selectedDevice = deviceId;
+            document.querySelectorAll('.device-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            document.getElementById('info-panel').style.display = 'block';
+
+            await loadDeviceHistory(deviceId);
+        }
+
+        async function loadDeviceHistory(deviceId) {
+            try {
+                let url = `/api/device/${deviceId}/history`;
+                const params = new URLSearchParams();
+
+                if (currentFilter.start) {
+                    params.append('start', currentFilter.start);
+                }
+                if (currentFilter.end) {
+                    params.append('end', currentFilter.end);
+                }
+
+                if (params.toString()) {
+                    url += '?' + params.toString();
+                }
+
+                const response = await fetch(url);
+                const history = await response.json();
+
+                if (history.length > 0) {
+                    const latest = history[history.length - 1];
+                    updateInfoPanel(latest, history.length);
+                    map.setView([latest.lat, latest.lon], 15);
+                    drawRoute(deviceId, history);
+                } else {
+                    updateInfoPanel(null, 0);
+                    if (routes[deviceId]) {
+                        map.removeLayer(routes[deviceId]);
+                    }
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function updateInfoPanel(location, count) {
+            if (location) {
+                document.getElementById('info-lat').textContent = location.lat.toFixed(6);
+                document.getElementById('info-lon').textContent = location.lon.toFixed(6);
+                document.getElementById('info-accuracy').textContent = `${(location.accuracy || 0).toFixed(1)} m`;
+                document.getElementById('info-time').textContent = formatDate(location.timestamp);
+            } else {
+                document.getElementById('info-lat').textContent = '-';
+                document.getElementById('info-lon').textContent = '-';
+                document.getElementById('info-accuracy').textContent = '-';
+                document.getElementById('info-time').textContent = '-';
+            }
+            document.getElementById('info-records').textContent = count || 0;
+        }
+
+        function drawRoute(deviceId, history) {
+            // Eliminar ruta anterior
+            if (routes[deviceId]) {
+                map.removeLayer(routes[deviceId]);
+            }
+            // Eliminar marcador de inicio anterior
+            if (markers[deviceId + '_start']) {
+                map.removeLayer(markers[deviceId + '_start']);
+            }
+
+            if (!showRoute || history.length < 2) return;
+
+            const points = history.map(h => [h.lat, h.lon]);
+
+            // Dibujar la ruta
+            routes[deviceId] = L.polyline(points, {
+                color: '#6D1024',
+                weight: 4,
+                opacity: 0.8
+            }).addTo(map);
+
+            // Marcador de inicio (verde)
+            markers[deviceId + '_start'] = L.marker(points[0], {icon: startIcon})
+                .addTo(map)
+                .bindPopup(`<b>Inicio:</b><br>${formatDate(history[0].timestamp)}`);
+
+            // Ajustar vista al recorrido
+            map.fitBounds(routes[deviceId].getBounds(), { padding: [50, 50] });
+        }
+
+        function toggleRoute() {
+            showRoute = document.getElementById('show-route').checked;
+            if (selectedDevice) {
+                loadDeviceHistory(selectedDevice);
+            }
+        }
+
+        function applyFilter() {
+            const start = document.getElementById('filter-start').value;
+            const end = document.getElementById('filter-end').value;
+
+            if (!start && !end) {
+                alert('Selecciona al menos una fecha');
+                return;
+            }
+
+            currentFilter.start = start ? new Date(start).toISOString() : null;
+            currentFilter.end = end ? new Date(end).toISOString() : null;
+
+            // Mostrar info del filtro
+            const filterInfo = document.getElementById('filter-info');
+            let filterText = 'Filtro activo: ';
+            if (currentFilter.start) filterText += `Desde ${formatDate(currentFilter.start)} `;
+            if (currentFilter.end) filterText += `Hasta ${formatDate(currentFilter.end)}`;
+            filterInfo.textContent = filterText;
+            filterInfo.classList.add('active');
+
+            if (selectedDevice) {
+                loadDeviceHistory(selectedDevice);
+            }
+        }
+
+        function showAllHistory() {
+            currentFilter = { start: null, end: null };
+            document.getElementById('filter-start').value = '';
+            document.getElementById('filter-end').value = '';
+            document.getElementById('filter-info').classList.remove('active');
+
+            if (selectedDevice) {
+                loadDeviceHistory(selectedDevice);
+            }
+        }
+
+        function clearFilter() {
+            currentFilter = { start: null, end: null };
+            document.getElementById('filter-start').value = '';
+            document.getElementById('filter-end').value = '';
+            document.getElementById('filter-info').classList.remove('active');
+        }
+
+        function formatDate(isoString) {
+            if (!isoString) return '-';
+            const date = new Date(isoString);
+            return date.toLocaleString('es-MX', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        }
+
+        // Cargar dispositivos inicialmente y cada 5 segundos
+        loadDevices();
+        setInterval(loadDevices, 5000);
+    </script>
+</body>
+</html>
